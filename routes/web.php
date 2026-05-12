@@ -43,6 +43,10 @@ Route::delete('categories/destroy', 'CategoriesController@massDestroy')->name('c
 Route::delete('categories/{category}/media/{media}', 'CategoriesController@removeMedia')->name('categories.removeMedia');
 Route::resource('categories', 'CategoriesController');
 
+// Product Variants
+Route::delete('product-variants/destroy', 'ProductVariantsController@massDestroy')->name('product-variants.massDestroy');
+Route::resource('product-variants', 'ProductVariantsController');
+
     
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

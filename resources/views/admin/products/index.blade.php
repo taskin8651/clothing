@@ -8,7 +8,7 @@
     <div>
         <h2 class="admin-page-title">Products</h2>
         <p class="admin-page-subtitle">
-            Manage clothing products, prices, stock, images and return settings
+            Manage clothing products, shops, categories, variants, stock and return rules
         </p>
     </div>
 
@@ -37,8 +37,8 @@
     </div>
 
     <div class="stat-card">
-        <p class="stat-label">Low Stock</p>
-        <p class="stat-value">{{ $products->where('stock_quantity', '<=', 5)->count() }}</p>
+        <p class="stat-label">Variants</p>
+        <p class="stat-value">{{ $products->sum(fn($product) => $product->variants->count()) }}</p>
     </div>
 </div>
 
@@ -48,7 +48,7 @@
 
         <span class="page-card-note">
             <i class="fas fa-info-circle"></i>
-            Product image, shop, category, stock and return rules
+            Product image, variant stock, shop and category details
         </span>
     </div>
 
@@ -62,6 +62,7 @@
                     <th>Shop</th>
                     <th>Category</th>
                     <th>Price</th>
+                    <th>Variants</th>
                     <th>Stock</th>
                     <th>Try Cloth</th>
                     <th>Return</th>
@@ -72,6 +73,11 @@
 
             <tbody>
                 @foreach($products as $product)
+                    @php
+                        $variantStock = $product->variants->sum('stock_quantity');
+                        $totalStock = $product->variants->count() ? $variantStock : $product->stock_quantity;
+                    @endphp
+
                     <tr data-entry-id="{{ $product->id }}">
                         <td></td>
 
@@ -114,7 +120,9 @@
 
                         <td>
                             <div>
-                                <p class="table-main-text">₹{{ number_format($product->price, 2) }}</p>
+                                <p class="table-main-text">
+                                    ₹{{ number_format($product->price, 2) }}
+                                </p>
 
                                 @if($product->discount_price)
                                     <p class="table-sub-text">
@@ -125,14 +133,22 @@
                         </td>
 
                         <td>
-                            @if($product->stock_quantity <= 5)
-                                <span class="status-pill warning">
-                                    {{ $product->stock_quantity }} left
+                            @if($product->variants->count())
+                                <span class="status-pill success">
+                                    {{ $product->variants->count() }}
                                 </span>
                             @else
-                                <span class="status-pill success">
-                                    {{ $product->stock_quantity }}
-                                </span>
+                                <span class="status-pill warning">No</span>
+                            @endif
+                        </td>
+
+                        <td>
+                            @if($totalStock <= 0)
+                                <span class="status-pill warning">Out</span>
+                            @elseif($totalStock <= 5)
+                                <span class="status-pill warning">{{ $totalStock }} left</span>
+                            @else
+                                <span class="status-pill success">{{ $totalStock }}</span>
                             @endif
                         </td>
 

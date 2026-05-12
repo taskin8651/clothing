@@ -113,13 +113,16 @@
 @php
     $catalogActive = request()->is('admin/shops*')
         || request()->is('admin/categories*')
-        || request()->is('admin/products*');
+        || request()->is('admin/products*')
+        || request()->is('admin/product-variants*');
 @endphp
 
 @if(
     Gate::allows('shop_access') ||
     Gate::allows('category_access') ||
-    Gate::allows('product_access')
+    Gate::allows('product_access') ||
+    Gate::alaows('product_variant_access')
+
 )
     <p class="sidebar-section-title nav-label">Catalog</p>
 
@@ -171,6 +174,14 @@
                     Products
                 </a>
             @endcan
+
+            @can('product_variant_access')
+    <a href="{{ route('admin.product-variants.index') }}"
+       class="sub-link {{ request()->is('admin/product-variants*') ? 'active' : '' }}">
+        <i class="fas fa-sliders-h"></i>
+        Product Variants
+    </a>
+@endcan
 
         </div>
     </div>

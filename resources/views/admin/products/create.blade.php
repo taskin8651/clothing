@@ -13,7 +13,7 @@
         <h2 class="admin-page-title">Add Product</h2>
 
         <p class="admin-page-subtitle">
-            Create a new clothing product with images, stock and return settings
+            Create a new clothing product with images, variants, stock and return settings
         </p>
     </div>
 </div>
@@ -23,6 +23,7 @@
 
     <div class="admin-form-grid">
 
+        {{-- PRODUCT INFORMATION --}}
         <div class="form-card">
             <div class="form-card-header">
                 <div class="form-card-icon">
@@ -55,7 +56,10 @@
                     </div>
 
                     @if($errors->has('name'))
-                        <p class="field-error"><i class="fas fa-exclamation-circle"></i> {{ $errors->first('name') }}</p>
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('name') }}
+                        </p>
                     @endif
                 </div>
 
@@ -74,7 +78,10 @@
                     </div>
 
                     @if($errors->has('slug'))
-                        <p class="field-error"><i class="fas fa-exclamation-circle"></i> {{ $errors->first('slug') }}</p>
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('slug') }}
+                        </p>
                     @else
                         <p class="field-hint">Blank rakhne par slug auto generate hoga.</p>
                     @endif
@@ -95,7 +102,10 @@
                     </div>
 
                     @if($errors->has('sku'))
-                        <p class="field-error"><i class="fas fa-exclamation-circle"></i> {{ $errors->first('sku') }}</p>
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('sku') }}
+                        </p>
                     @endif
                 </div>
 
@@ -106,14 +116,17 @@
                             id="shop_id"
                             class="field-input {{ $errors->has('shop_id') ? 'error' : '' }}">
                         @foreach($shops as $id => $entry)
-                            <option value="{{ $id }}" {{ old('shop_id') == $id ? 'selected' : '' }}>
+                            <option value="{{ $id }}" {{ (string) old('shop_id') === (string) $id ? 'selected' : '' }}>
                                 {{ $entry }}
                             </option>
                         @endforeach
                     </select>
 
                     @if($errors->has('shop_id'))
-                        <p class="field-error"><i class="fas fa-exclamation-circle"></i> {{ $errors->first('shop_id') }}</p>
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('shop_id') }}
+                        </p>
                     @endif
                 </div>
 
@@ -124,14 +137,17 @@
                             id="category_id"
                             class="field-input {{ $errors->has('category_id') ? 'error' : '' }}">
                         @foreach($categories as $id => $entry)
-                            <option value="{{ $id }}" {{ old('category_id') == $id ? 'selected' : '' }}>
+                            <option value="{{ $id }}" {{ (string) old('category_id') === (string) $id ? 'selected' : '' }}>
                                 {{ $entry }}
                             </option>
                         @endforeach
                     </select>
 
                     @if($errors->has('category_id'))
-                        <p class="field-error"><i class="fas fa-exclamation-circle"></i> {{ $errors->first('category_id') }}</p>
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('category_id') }}
+                        </p>
                     @endif
                 </div>
 
@@ -145,7 +161,10 @@
                               class="field-input {{ $errors->has('short_description') ? 'error' : '' }}">{{ old('short_description') }}</textarea>
 
                     @if($errors->has('short_description'))
-                        <p class="field-error"><i class="fas fa-exclamation-circle"></i> {{ $errors->first('short_description') }}</p>
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('short_description') }}
+                        </p>
                     @endif
                 </div>
 
@@ -159,13 +178,17 @@
                               class="field-input {{ $errors->has('description') ? 'error' : '' }}">{{ old('description') }}</textarea>
 
                     @if($errors->has('description'))
-                        <p class="field-error"><i class="fas fa-exclamation-circle"></i> {{ $errors->first('description') }}</p>
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('description') }}
+                        </p>
                     @endif
                 </div>
 
             </div>
         </div>
 
+        {{-- PRICE & STOCK --}}
         <div class="form-card">
             <div class="form-card-header">
                 <div class="form-card-icon">
@@ -174,14 +197,16 @@
 
                 <div>
                     <p class="form-card-title">Price & Stock</p>
-                    <p class="form-card-subtitle">Pricing and inventory details</p>
+                    <p class="form-card-subtitle">Base pricing and inventory details</p>
                 </div>
             </div>
 
             <div class="form-card-body">
 
                 <div class="field-group">
-                    <label class="field-label" for="price">Price <span class="req">*</span></label>
+                    <label class="field-label" for="price">
+                        Price <span class="req">*</span>
+                    </label>
 
                     <div class="input-icon-wrap">
                         <i class="fas fa-rupee-sign icon"></i>
@@ -197,7 +222,10 @@
                     </div>
 
                     @if($errors->has('price'))
-                        <p class="field-error"><i class="fas fa-exclamation-circle"></i> {{ $errors->first('price') }}</p>
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('price') }}
+                        </p>
                     @endif
                 </div>
 
@@ -217,12 +245,15 @@
                     </div>
 
                     @if($errors->has('discount_price'))
-                        <p class="field-error"><i class="fas fa-exclamation-circle"></i> {{ $errors->first('discount_price') }}</p>
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('discount_price') }}
+                        </p>
                     @endif
                 </div>
 
                 <div class="field-group">
-                    <label class="field-label" for="stock_quantity">Stock Quantity</label>
+                    <label class="field-label" for="stock_quantity">Base Stock Quantity</label>
 
                     <div class="input-icon-wrap">
                         <i class="fas fa-boxes icon"></i>
@@ -236,7 +267,12 @@
                     </div>
 
                     @if($errors->has('stock_quantity'))
-                        <p class="field-error"><i class="fas fa-exclamation-circle"></i> {{ $errors->first('stock_quantity') }}</p>
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('stock_quantity') }}
+                        </p>
+                    @else
+                        <p class="field-hint">Variant stock use karoge to base stock optional rahega.</p>
                     @endif
                 </div>
 
@@ -250,8 +286,16 @@
                                name="brand"
                                id="brand"
                                value="{{ old('brand') }}"
+                               placeholder="Example: Raymond, Zara, Local Brand"
                                class="field-input {{ $errors->has('brand') ? 'error' : '' }}">
                     </div>
+
+                    @if($errors->has('brand'))
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('brand') }}
+                        </p>
+                    @endif
                 </div>
 
                 <div class="field-group">
@@ -267,6 +311,13 @@
                                placeholder="Cotton, Silk, Denim..."
                                class="field-input {{ $errors->has('fabric') ? 'error' : '' }}">
                     </div>
+
+                    @if($errors->has('fabric'))
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('fabric') }}
+                        </p>
+                    @endif
                 </div>
 
                 <div class="field-group">
@@ -279,13 +330,21 @@
                                name="sort_order"
                                id="sort_order"
                                value="{{ old('sort_order', 0) }}"
-                               class="field-input">
+                               class="field-input {{ $errors->has('sort_order') ? 'error' : '' }}">
                     </div>
+
+                    @if($errors->has('sort_order'))
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('sort_order') }}
+                        </p>
+                    @endif
                 </div>
 
             </div>
         </div>
 
+        {{-- PRODUCT IMAGES --}}
         <div class="form-card">
             <div class="form-card-header">
                 <div class="form-card-icon">
@@ -311,7 +370,10 @@
                            onchange="previewSingleImage(this, 'mainImagePreview')">
 
                     @if($errors->has('main_image'))
-                        <p class="field-error"><i class="fas fa-exclamation-circle"></i> {{ $errors->first('main_image') }}</p>
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('main_image') }}
+                        </p>
                     @else
                         <p class="field-hint">Recommended: JPG, PNG, WEBP. Max 4MB.</p>
                     @endif
@@ -327,21 +389,239 @@
                            id="gallery_images"
                            accept="image/*"
                            multiple
-                           class="field-input {{ $errors->has('gallery_images') ? 'error' : '' }}"
+                           class="field-input {{ $errors->has('gallery_images') || $errors->has('gallery_images.*') ? 'error' : '' }}"
                            onchange="previewMultipleImages(this, 'galleryImagePreview')">
 
                     @if($errors->has('gallery_images'))
-                        <p class="field-error"><i class="fas fa-exclamation-circle"></i> {{ $errors->first('gallery_images') }}</p>
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('gallery_images') }}
+                        </p>
+                    @elseif($errors->has('gallery_images.*'))
+                        <p class="field-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ $errors->first('gallery_images.*') }}
+                        </p>
                     @else
                         <p class="field-hint">Multiple product images select kar sakte ho.</p>
                     @endif
 
-                    <div id="galleryImagePreview" style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;"></div>
+                    <div id="galleryImagePreview"
+                         style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;"></div>
                 </div>
 
             </div>
         </div>
 
+        {{-- PRODUCT VARIANTS --}}
+        <div class="form-card">
+            <div class="form-card-header between">
+                <div class="form-card-head-left">
+                    <div class="form-card-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+
+                    <div>
+                        <p class="form-card-title">Product Variants</p>
+                        <p class="form-card-subtitle">Add size, color, SKU, price and stock</p>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-mini-primary" onclick="addVariantRow()">
+                    <i class="fas fa-plus"></i>
+                    Add
+                </button>
+            </div>
+
+            <div class="form-card-body">
+
+                <div id="variantRows">
+
+                    @php
+                        $oldVariants = old('variants', [
+                            [
+                                'size' => '',
+                                'color' => '',
+                                'sku' => '',
+                                'price' => '',
+                                'discount_price' => '',
+                                'stock_quantity' => 0,
+                                'sort_order' => 0,
+                                'status' => 1,
+                            ]
+                        ]);
+                    @endphp
+
+                    @foreach($oldVariants as $index => $variant)
+                        <div class="variant-row" data-index="{{ $index }}">
+                            <div class="variant-row-head">
+                                <p>
+                                    <i class="fas fa-sliders-h"></i>
+                                    Variant #<span class="variant-number">{{ $index + 1 }}</span>
+                                </p>
+
+                                <button type="button"
+                                        class="btn-mini-ghost text-danger"
+                                        onclick="removeVariantRow(this)">
+                                    <i class="fas fa-trash-alt"></i>
+                                    Remove
+                                </button>
+                            </div>
+
+                            <div class="variant-grid">
+
+                                <div class="field-group">
+                                    <label class="field-label">Size</label>
+
+                                    <input type="text"
+                                           name="variants[{{ $index }}][size]"
+                                           value="{{ $variant['size'] ?? '' }}"
+                                           placeholder="S, M, L, XL, 32..."
+                                           class="field-input {{ $errors->has('variants.' . $index . '.size') ? 'error' : '' }}">
+
+                                    @if($errors->has('variants.' . $index . '.size'))
+                                        <p class="field-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ $errors->first('variants.' . $index . '.size') }}
+                                        </p>
+                                    @endif
+                                </div>
+
+                                <div class="field-group">
+                                    <label class="field-label">Color</label>
+
+                                    <input type="text"
+                                           name="variants[{{ $index }}][color]"
+                                           value="{{ $variant['color'] ?? '' }}"
+                                           placeholder="Black, White, Blue..."
+                                           class="field-input {{ $errors->has('variants.' . $index . '.color') ? 'error' : '' }}">
+
+                                    @if($errors->has('variants.' . $index . '.color'))
+                                        <p class="field-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ $errors->first('variants.' . $index . '.color') }}
+                                        </p>
+                                    @endif
+                                </div>
+
+                                <div class="field-group">
+                                    <label class="field-label">Variant SKU</label>
+
+                                    <input type="text"
+                                           name="variants[{{ $index }}][sku]"
+                                           value="{{ $variant['sku'] ?? '' }}"
+                                           placeholder="SKU-M-BLACK"
+                                           class="field-input {{ $errors->has('variants.' . $index . '.sku') ? 'error' : '' }}">
+
+                                    @if($errors->has('variants.' . $index . '.sku'))
+                                        <p class="field-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ $errors->first('variants.' . $index . '.sku') }}
+                                        </p>
+                                    @endif
+                                </div>
+
+                                <div class="field-group">
+                                    <label class="field-label">Price</label>
+
+                                    <input type="number"
+                                           step="0.01"
+                                           min="0"
+                                           name="variants[{{ $index }}][price]"
+                                           value="{{ $variant['price'] ?? '' }}"
+                                           placeholder="Blank = product price"
+                                           class="field-input {{ $errors->has('variants.' . $index . '.price') ? 'error' : '' }}">
+
+                                    @if($errors->has('variants.' . $index . '.price'))
+                                        <p class="field-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ $errors->first('variants.' . $index . '.price') }}
+                                        </p>
+                                    @endif
+                                </div>
+
+                                <div class="field-group">
+                                    <label class="field-label">Discount Price</label>
+
+                                    <input type="number"
+                                           step="0.01"
+                                           min="0"
+                                           name="variants[{{ $index }}][discount_price]"
+                                           value="{{ $variant['discount_price'] ?? '' }}"
+                                           class="field-input {{ $errors->has('variants.' . $index . '.discount_price') ? 'error' : '' }}">
+
+                                    @if($errors->has('variants.' . $index . '.discount_price'))
+                                        <p class="field-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ $errors->first('variants.' . $index . '.discount_price') }}
+                                        </p>
+                                    @endif
+                                </div>
+
+                                <div class="field-group">
+                                    <label class="field-label">Stock</label>
+
+                                    <input type="number"
+                                           min="0"
+                                           name="variants[{{ $index }}][stock_quantity]"
+                                           value="{{ $variant['stock_quantity'] ?? 0 }}"
+                                           class="field-input {{ $errors->has('variants.' . $index . '.stock_quantity') ? 'error' : '' }}">
+
+                                    @if($errors->has('variants.' . $index . '.stock_quantity'))
+                                        <p class="field-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ $errors->first('variants.' . $index . '.stock_quantity') }}
+                                        </p>
+                                    @endif
+                                </div>
+
+                                <div class="field-group">
+                                    <label class="field-label">Sort Order</label>
+
+                                    <input type="number"
+                                           name="variants[{{ $index }}][sort_order]"
+                                           value="{{ $variant['sort_order'] ?? 0 }}"
+                                           class="field-input {{ $errors->has('variants.' . $index . '.sort_order') ? 'error' : '' }}">
+
+                                    @if($errors->has('variants.' . $index . '.sort_order'))
+                                        <p class="field-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ $errors->first('variants.' . $index . '.sort_order') }}
+                                        </p>
+                                    @endif
+                                </div>
+
+                                <div class="field-group">
+                                    <label class="field-label">Status</label>
+
+                                    <label class="role-checkbox-item {{ !empty($variant['status']) ? 'checked' : '' }}">
+                                        <input type="checkbox"
+                                               name="variants[{{ $index }}][status]"
+                                               value="1"
+                                               class="role-checkbox"
+                                               {{ !empty($variant['status']) ? 'checked' : '' }}>
+                                        <div class="check-icon"></div>
+                                        <span class="checkbox-text">Active</span>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                    @endforeach
+
+                </div>
+
+                <div class="form-info-box">
+                    <p>
+                        <i class="fas fa-info-circle"></i>
+                        Size/color wise stock yahin se manage hoga. Example: M Black 10 stock, L White 5 stock.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        {{-- PRODUCT SETTINGS --}}
         <div class="form-card">
             <div class="form-card-header">
                 <div class="form-card-icon">
@@ -356,43 +636,50 @@
 
             <div class="form-card-body">
 
+                @php
+                    $tryCloth = old('try_cloth_available', 1);
+                    $returnAvailable = old('return_available', 1);
+                    $featured = old('is_featured', 0);
+                    $status = old('status', 1);
+                @endphp
+
                 <div class="checkbox-grid">
-                    <label class="role-checkbox-item checked">
+                    <label class="role-checkbox-item {{ $tryCloth ? 'checked' : '' }}">
                         <input type="checkbox"
                                name="try_cloth_available"
                                value="1"
                                class="role-checkbox"
-                               {{ old('try_cloth_available', 1) ? 'checked' : '' }}>
+                               {{ $tryCloth ? 'checked' : '' }}>
                         <div class="check-icon"></div>
                         <span class="checkbox-text">Try Cloth Available</span>
                     </label>
 
-                    <label class="role-checkbox-item checked">
+                    <label class="role-checkbox-item {{ $returnAvailable ? 'checked' : '' }}">
                         <input type="checkbox"
                                name="return_available"
                                value="1"
                                class="role-checkbox"
-                               {{ old('return_available', 1) ? 'checked' : '' }}>
+                               {{ $returnAvailable ? 'checked' : '' }}>
                         <div class="check-icon"></div>
                         <span class="checkbox-text">Return Available</span>
                     </label>
 
-                    <label class="role-checkbox-item">
+                    <label class="role-checkbox-item {{ $featured ? 'checked' : '' }}">
                         <input type="checkbox"
                                name="is_featured"
                                value="1"
                                class="role-checkbox"
-                               {{ old('is_featured') ? 'checked' : '' }}>
+                               {{ $featured ? 'checked' : '' }}>
                         <div class="check-icon"></div>
                         <span class="checkbox-text">Featured Product</span>
                     </label>
 
-                    <label class="role-checkbox-item checked">
+                    <label class="role-checkbox-item {{ $status ? 'checked' : '' }}">
                         <input type="checkbox"
                                name="status"
                                value="1"
                                class="role-checkbox"
-                               {{ old('status', 1) ? 'checked' : '' }}>
+                               {{ $status ? 'checked' : '' }}>
                         <div class="check-icon"></div>
                         <span class="checkbox-text">Active Status</span>
                     </label>
@@ -427,45 +714,320 @@
 
 @section('scripts')
 @parent
+
 <script>
+function makeSlug(value) {
+    return value
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/&/g, 'and')
+        .replace(/[\s\W-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+const nameInput = document.getElementById('name');
+const slugInput = document.getElementById('slug');
+
+if (nameInput && slugInput) {
+    nameInput.addEventListener('keyup', function () {
+        if (!slugInput.dataset.manual || slugInput.dataset.manual === '0') {
+            slugInput.value = makeSlug(this.value);
+        }
+    });
+
+    slugInput.addEventListener('input', function () {
+        this.dataset.manual = '1';
+        this.value = makeSlug(this.value);
+    });
+}
+
 function previewSingleImage(input, targetId) {
     const target = document.getElementById(targetId);
     target.innerHTML = '';
 
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            target.innerHTML = `
-                <img src="${e.target.result}"
-                     style="width:140px;height:120px;object-fit:cover;border-radius:14px;border:1px solid #E2E8F0;">
-            `;
-        };
-
-        reader.readAsDataURL(input.files[0]);
+    if (!input.files || !input.files[0]) {
+        return;
     }
+
+    const file = input.files[0];
+
+    if (!file.type.startsWith('image/')) {
+        target.innerHTML = '<p class="field-error"><i class="fas fa-exclamation-circle"></i> Please select a valid image.</p>';
+        input.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        target.innerHTML = `
+            <div style="position:relative; width:150px;">
+                <img src="${e.target.result}"
+                     style="width:150px;height:125px;object-fit:cover;border-radius:16px;border:1px solid #E2E8F0;">
+                <button type="button"
+                        onclick="clearSingleImage('${input.id}', '${targetId}')"
+                        style="position:absolute;top:6px;right:6px;border:0;border-radius:999px;background:#EF4444;color:#fff;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+                    ×
+                </button>
+            </div>
+        `;
+    };
+
+    reader.readAsDataURL(file);
+}
+
+function clearSingleImage(inputId, targetId) {
+    document.getElementById(inputId).value = '';
+    document.getElementById(targetId).innerHTML = '';
 }
 
 function previewMultipleImages(input, targetId) {
     const target = document.getElementById(targetId);
     target.innerHTML = '';
 
-    if (input.files) {
-        Array.from(input.files).forEach(file => {
-            const reader = new FileReader();
+    if (!input.files || input.files.length === 0) {
+        return;
+    }
 
-            reader.onload = function(e) {
-                const box = document.createElement('div');
-                box.innerHTML = `
-                    <img src="${e.target.result}"
-                         style="width:110px;height:95px;object-fit:cover;border-radius:14px;border:1px solid #E2E8F0;">
-                `;
-                target.appendChild(box);
-            };
+    Array.from(input.files).forEach(file => {
+        if (!file.type.startsWith('image/')) {
+            return;
+        }
 
-            reader.readAsDataURL(file);
-        });
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const box = document.createElement('div');
+            box.style.position = 'relative';
+            box.style.width = '115px';
+
+            box.innerHTML = `
+                <img src="${e.target.result}"
+                     style="width:115px;height:100px;object-fit:cover;border-radius:14px;border:1px solid #E2E8F0;">
+            `;
+
+            target.appendChild(box);
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+let variantIndex = document.querySelectorAll('.variant-row').length;
+
+function addVariantRow() {
+    const wrapper = document.getElementById('variantRows');
+
+    const html = `
+        <div class="variant-row" data-index="${variantIndex}">
+            <div class="variant-row-head">
+                <p>
+                    <i class="fas fa-sliders-h"></i>
+                    Variant #<span class="variant-number">${variantIndex + 1}</span>
+                </p>
+
+                <button type="button"
+                        class="btn-mini-ghost text-danger"
+                        onclick="removeVariantRow(this)">
+                    <i class="fas fa-trash-alt"></i>
+                    Remove
+                </button>
+            </div>
+
+            <div class="variant-grid">
+
+                <div class="field-group">
+                    <label class="field-label">Size</label>
+                    <input type="text"
+                           name="variants[${variantIndex}][size]"
+                           placeholder="S, M, L, XL, 32..."
+                           class="field-input">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Color</label>
+                    <input type="text"
+                           name="variants[${variantIndex}][color]"
+                           placeholder="Black, White, Blue..."
+                           class="field-input">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Variant SKU</label>
+                    <input type="text"
+                           name="variants[${variantIndex}][sku]"
+                           placeholder="SKU-M-BLACK"
+                           class="field-input">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Price</label>
+                    <input type="number"
+                           step="0.01"
+                           min="0"
+                           name="variants[${variantIndex}][price]"
+                           placeholder="Blank = product price"
+                           class="field-input">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Discount Price</label>
+                    <input type="number"
+                           step="0.01"
+                           min="0"
+                           name="variants[${variantIndex}][discount_price]"
+                           class="field-input">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Stock</label>
+                    <input type="number"
+                           min="0"
+                           name="variants[${variantIndex}][stock_quantity]"
+                           value="0"
+                           class="field-input">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Sort Order</label>
+                    <input type="number"
+                           name="variants[${variantIndex}][sort_order]"
+                           value="0"
+                           class="field-input">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Status</label>
+
+                    <label class="role-checkbox-item checked">
+                        <input type="checkbox"
+                               name="variants[${variantIndex}][status]"
+                               value="1"
+                               class="role-checkbox"
+                               checked>
+                        <div class="check-icon"></div>
+                        <span class="checkbox-text">Active</span>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+    `;
+
+    wrapper.insertAdjacentHTML('beforeend', html);
+
+    variantIndex++;
+    refreshVariantNumbers();
+    bindCheckboxStyle();
+}
+
+function removeVariantRow(button) {
+    const rows = document.querySelectorAll('.variant-row');
+
+    if (rows.length <= 1) {
+        alert('At least one variant row required.');
+        return;
+    }
+
+    button.closest('.variant-row').remove();
+
+    refreshVariantNumbers();
+}
+
+function refreshVariantNumbers() {
+    document.querySelectorAll('.variant-row').forEach(function(row, index) {
+        const number = row.querySelector('.variant-number');
+
+        if (number) {
+            number.textContent = index + 1;
+        }
+    });
+}
+
+function bindCheckboxStyle() {
+    document.querySelectorAll('.role-checkbox-item input[type="checkbox"]').forEach(function (checkbox) {
+        checkbox.onchange = function () {
+            const label = this.closest('.role-checkbox-item');
+
+            if (this.checked) {
+                label.classList.add('checked');
+            } else {
+                label.classList.remove('checked');
+            }
+        };
+    });
+}
+
+bindCheckboxStyle();
+</script>
+
+<style>
+.variant-row{
+    border:1px solid #E2E8F0;
+    background:#FFFFFF;
+    border-radius:18px;
+    padding:16px;
+    margin-bottom:14px;
+    box-shadow:0 10px 24px rgba(15,23,42,.04);
+}
+
+.variant-row-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding-bottom:12px;
+    margin-bottom:14px;
+    border-bottom:1px solid #EEF2F7;
+}
+
+.variant-row-head p{
+    margin:0;
+    font-size:13px;
+    font-weight:800;
+    color:#0F172A;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.variant-row-head p i{
+    color:#4F46E5;
+}
+
+.variant-grid{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    gap:14px;
+}
+
+.text-danger{
+    color:#DC2626 !important;
+}
+
+@media(max-width: 1199px){
+    .variant-grid{
+        grid-template-columns:repeat(3, minmax(0, 1fr));
     }
 }
-</script>
+
+@media(max-width: 991px){
+    .variant-grid{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media(max-width: 575px){
+    .variant-grid{
+        grid-template-columns:1fr;
+    }
+
+    .variant-row-head{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+}
+</style>
+
 @endsection

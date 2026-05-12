@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Shop;
 use Gate;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,12 @@ class ProductsController extends Controller
     {
         abort_if(Gate::denies('product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $products = Product::with(['shop', 'category', 'media'])
+        $products = Product::with([
+                'shop',
+                'category',
+                'media',
+                'variants',
+            ])
             ->latest()
             ->get();
 
@@ -43,35 +49,14 @@ class ProductsController extends Controller
         return view('admin.products.create', compact('shops', 'categories'));
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
         abort_if(Gate::denies('product_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $request->validate([
-            'shop_id' => ['nullable', 'exists:shops,id'],
-            'category_id' => ['nullable', 'exists:categories,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:products,slug'],
-            'sku' => ['nullable', 'string', 'max:255'],
-            'short_description' => ['nullable', 'string'],
-            'description' => ['nullable', 'string'],
-            'brand' => ['nullable', 'string', 'max:255'],
-            'fabric' => ['nullable', 'string', 'max:255'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'discount_price' => ['nullable', 'numeric', 'min:0'],
-            'stock_quantity' => ['nullable', 'integer', 'min:0'],
-            'try_cloth_available' => ['nullable', 'boolean'],
-            'return_available' => ['nullable', 'boolean'],
-            'is_featured' => ['nullable', 'boolean'],
-            'status' => ['nullable', 'boolean'],
-            'sort_order' => ['nullable', 'integer'],
-            'main_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'gallery_images.*' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-        ]);
 
         $data = $request->except([
             'main_image',
             'gallery_images',
+            'variants',
         ]);
 
         $data['slug'] = $request->slug ?: Str::slug($request->name);
@@ -98,6 +83,8 @@ class ProductsController extends Controller
             }
         }
 
+        $this->syncProductVariants($request, $product);
+
         return redirect()
             ->route('admin.products.index')
             ->with('message', 'Product created successfully.');
@@ -107,7 +94,12 @@ class ProductsController extends Controller
     {
         abort_if(Gate::denies('product_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $product->load(['shop', 'category', 'media']);
+        $product->load([
+            'shop',
+            'category',
+            'media',
+            'variants',
+        ]);
 
         return view('admin.products.show', compact('product'));
     }
@@ -126,42 +118,23 @@ class ProductsController extends Controller
             ->pluck('name', 'id')
             ->prepend('Please Select', '');
 
-        $product->load('media');
+        $product->load([
+            'media',
+            'variants',
+        ]);
 
         return view('admin.products.edit', compact('product', 'shops', 'categories'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
         abort_if(Gate::denies('product_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $request->validate([
-            'shop_id' => ['nullable', 'exists:shops,id'],
-            'category_id' => ['nullable', 'exists:categories,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:products,slug,' . $product->id],
-            'sku' => ['nullable', 'string', 'max:255'],
-            'short_description' => ['nullable', 'string'],
-            'description' => ['nullable', 'string'],
-            'brand' => ['nullable', 'string', 'max:255'],
-            'fabric' => ['nullable', 'string', 'max:255'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'discount_price' => ['nullable', 'numeric', 'min:0'],
-            'stock_quantity' => ['nullable', 'integer', 'min:0'],
-            'try_cloth_available' => ['nullable', 'boolean'],
-            'return_available' => ['nullable', 'boolean'],
-            'is_featured' => ['nullable', 'boolean'],
-            'status' => ['nullable', 'boolean'],
-            'sort_order' => ['nullable', 'integer'],
-            'main_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'gallery_images.*' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'remove_main_image' => ['nullable', 'boolean'],
-        ]);
 
         $data = $request->except([
             'main_image',
             'gallery_images',
             'remove_main_image',
+            'variants',
         ]);
 
         $data['slug'] = $request->slug ?: Str::slug($request->name);
@@ -193,6 +166,8 @@ class ProductsController extends Controller
                     ->toMediaCollection('gallery_images');
             }
         }
+
+        $this->syncProductVariants($request, $product);
 
         return redirect()
             ->route('admin.products.index')
@@ -228,5 +203,56 @@ class ProductsController extends Controller
         $media->delete();
 
         return back()->with('message', 'Image removed successfully.');
+    }
+
+    private function syncProductVariants(Request $request, Product $product): void
+    {
+        if (! $request->has('variants')) {
+            return;
+        }
+
+        foreach ($request->variants as $variant) {
+            $variantId = $variant['id'] ?? null;
+            $deleteVariant = isset($variant['delete']) && (int) $variant['delete'] === 1;
+
+            if ($variantId && $deleteVariant) {
+                $product->variants()
+                    ->where('id', $variantId)
+                    ->delete();
+
+                continue;
+            }
+
+            $hasVariantData = !empty($variant['size'])
+                || !empty($variant['color'])
+                || !empty($variant['sku'])
+                || !empty($variant['price'])
+                || !empty($variant['discount_price'])
+                || !empty($variant['stock_quantity']);
+
+            if (! $hasVariantData) {
+                continue;
+            }
+
+            $variantData = [
+                'size' => $variant['size'] ?? null,
+                'color' => $variant['color'] ?? null,
+                'sku' => $variant['sku'] ?? null,
+                'price' => $variant['price'] ?? null,
+                'discount_price' => $variant['discount_price'] ?? null,
+                'stock_quantity' => $variant['stock_quantity'] ?? 0,
+                'sort_order' => $variant['sort_order'] ?? 0,
+                'status' => isset($variant['status']) ? 1 : 0,
+            ];
+
+            if ($variantId) {
+                $product->variants()
+                    ->where('id', $variantId)
+                    ->update($variantData);
+            } else {
+                $product->variants()
+                    ->create($variantData);
+            }
+        }
     }
 }

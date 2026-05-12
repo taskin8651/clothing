@@ -47,6 +47,14 @@ Route::resource('categories', 'CategoriesController');
 Route::delete('product-variants/destroy', 'ProductVariantsController@massDestroy')->name('product-variants.massDestroy');
 Route::resource('product-variants', 'ProductVariantsController');
 
+// Customers
+Route::delete('customers/destroy', 'CustomersController@massDestroy')->name('customers.massDestroy');
+Route::resource('customers', 'CustomersController');
+
+// Customer Addresses
+Route::delete('customer-addresses/destroy', 'CustomerAddressesController@massDestroy')->name('customer-addresses.massDestroy');
+Route::resource('customer-addresses', 'CustomerAddressesController');
+
     
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

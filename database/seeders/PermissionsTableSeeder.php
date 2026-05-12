@@ -106,6 +106,46 @@ class PermissionsTableSeeder extends Seeder
                 'id'    => 24,
                 'title' => 'profile_password_edit',
             ],
+            [
+                'id'    => 25,
+                'title' => 'customer_create',
+            ],
+            [
+                'id'    => 26,
+                'title' => 'customer_edit',
+            ],
+            [
+                'id'    => 27,
+                'title' => 'customer_show',
+            ],
+            [
+                'id'    => 28,
+                'title' => 'customer_delete',
+            ],
+            [
+                'id'    => 29,
+                'title' => 'customer_access',
+            ],
+            [
+                'id'    => 30,
+                'title' => 'customer_address_create',
+            ],
+            [
+                'id'    => 31,
+                'title' => 'customer_address_edit',
+            ],
+            [
+                'id'    => 32,
+                'title' => 'customer_address_show',
+            ],
+            [
+                'id'    => 33,
+                'title' => 'customer_address_delete',
+            ],
+            [
+                'id'    => 34,
+                'title' => 'customer_address_access',
+            ],
         ];
 
         Permission::insert($permissions);

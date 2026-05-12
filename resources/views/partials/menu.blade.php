@@ -38,92 +38,86 @@
             <span class="nav-label">{{ trans('global.dashboard') }}</span>
         </a>
 
-        {{-- USER MANAGEMENT GROUP --}}
-        @can('user_management_access')
-            @php
-                $umActive = request()->is('admin/permissions*')
-                    || request()->is('admin/roles*')
-                    || request()->is('admin/users*')
-                    || request()->is('admin/audit-logs*');
-            @endphp
+       {{-- USER MANAGEMENT GROUP --}}
+@can('user_management_access')
+    @php
+        $umActive = request()->is('admin/permissions*')
+            || request()->is('admin/roles*')
+            || request()->is('admin/users*')
+            || request()->is('admin/audit-logs*');
+    @endphp
 
-            <div x-data="{ open: {{ $umActive ? 'true' : 'false' }} }">
+    <div x-data="{ open: {{ $umActive ? 'true' : 'false' }} }">
 
-                <button type="button"
-                        @click="open = !open"
-                        data-tooltip="Users"
-                        class="nav-link nav-group-btn {{ $umActive ? 'active' : '' }}">
+        <button type="button"
+                @click="open = !open"
+                data-tooltip="Users"
+                class="nav-link nav-group-btn {{ $umActive ? 'active' : '' }}">
 
-                    <div class="nav-group-left">
-                        <i class="fas fa-users nav-icon"></i>
-                        <span class="nav-label">{{ trans('cruds.userManagement.title') }}</span>
-                    </div>
-
-                    <i class="fas fa-chevron-right chevron"
-                       :style="open ? 'transform:rotate(90deg)' : ''"></i>
-                </button>
-
-                <div class="submenu"
-                     x-show="open"
-                     x-transition:enter="transition ease-out duration-150"
-                     x-transition:enter-start="opacity-0 -translate-y-1"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     x-transition:leave="transition ease-in duration-100"
-                     x-transition:leave-start="opacity-100 translate-y-0"
-                     x-transition:leave-end="opacity-0 -translate-y-1">
-
-                    @can('permission_access')
-                        <a href="{{ route('admin.permissions.index') }}"
-                           class="sub-link {{ request()->is('admin/permissions*') ? 'active' : '' }}">
-                            <i class="fas fa-key"></i>
-                            {{ trans('cruds.permission.title') }}
-                        </a>
-                    @endcan
-
-                    @can('role_access')
-                        <a href="{{ route('admin.roles.index') }}"
-                           class="sub-link {{ request()->is('admin/roles*') ? 'active' : '' }}">
-                            <i class="fas fa-shield-alt"></i>
-                            {{ trans('cruds.role.title') }}
-                        </a>
-                    @endcan
-
-                    @can('user_access')
-                        <a href="{{ route('admin.users.index') }}"
-                           class="sub-link {{ request()->is('admin/users*') ? 'active' : '' }}">
-                            <i class="fas fa-user-circle"></i>
-                            {{ trans('cruds.user.title') }}
-                        </a>
-                    @endcan
-
-                    @can('audit_log_access')
-                        <a href="{{ route('admin.audit-logs.index') }}"
-                           class="sub-link {{ request()->is('admin/audit-logs*') ? 'active' : '' }}">
-                            <i class="fas fa-history"></i>
-                            {{ trans('cruds.auditLog.title') }}
-                        </a>
-                    @endcan
-
-                </div>
+            <div class="nav-group-left">
+                <i class="fas fa-users nav-icon"></i>
+                <span class="nav-label">{{ trans('cruds.userManagement.title') }}</span>
             </div>
-        @endcan
+
+            <i class="fas fa-chevron-right chevron"
+               :style="open ? 'transform:rotate(90deg)' : ''"></i>
+        </button>
+
+        <div class="submenu"
+             x-show="open"
+             x-transition:enter="transition ease-out duration-150"
+             x-transition:enter-start="opacity-0 -translate-y-1"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-100"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-1">
+
+            @can('permission_access')
+                <a href="{{ route('admin.permissions.index') }}"
+                   class="sub-link {{ request()->is('admin/permissions*') ? 'active' : '' }}">
+                    <i class="fas fa-key"></i>
+                    {{ trans('cruds.permission.title') }}
+                </a>
+            @endcan
+
+            @can('role_access')
+                <a href="{{ route('admin.roles.index') }}"
+                   class="sub-link {{ request()->is('admin/roles*') ? 'active' : '' }}">
+                    <i class="fas fa-shield-alt"></i>
+                    {{ trans('cruds.role.title') }}
+                </a>
+            @endcan
+
+            @can('user_access')
+                <a href="{{ route('admin.users.index') }}"
+                   class="sub-link {{ request()->is('admin/users*') ? 'active' : '' }}">
+                    <i class="fas fa-user-circle"></i>
+                    {{ trans('cruds.user.title') }}
+                </a>
+            @endcan
+
+            @can('audit_log_access')
+                <a href="{{ route('admin.audit-logs.index') }}"
+                   class="sub-link {{ request()->is('admin/audit-logs*') ? 'active' : '' }}">
+                    <i class="fas fa-history"></i>
+                    {{ trans('cruds.auditLog.title') }}
+                </a>
+            @endcan
+
+        </div>
+    </div>
+@endcan
 
 
-        {{-- CATALOG MANAGEMENT GROUP --}}
-@php
-    $catalogActive = request()->is('admin/shops*')
-        || request()->is('admin/categories*')
-        || request()->is('admin/products*')
-        || request()->is('admin/product-variants*');
-@endphp
+{{-- CATALOG MANAGEMENT GROUP --}}
+@canany(['shop_access', 'category_access', 'product_access', 'product_variant_access'])
+    @php
+        $catalogActive = request()->is('admin/shops*')
+            || request()->is('admin/categories*')
+            || request()->is('admin/products*')
+            || request()->is('admin/product-variants*');
+    @endphp
 
-@if(
-    Gate::allows('shop_access') ||
-    Gate::allows('category_access') ||
-    Gate::allows('product_access') ||
-    Gate::alaows('product_variant_access')
-
-)
     <p class="sidebar-section-title nav-label">Catalog</p>
 
     <div x-data="{ open: {{ $catalogActive ? 'true' : 'false' }} }">
@@ -176,16 +170,72 @@
             @endcan
 
             @can('product_variant_access')
-    <a href="{{ route('admin.product-variants.index') }}"
-       class="sub-link {{ request()->is('admin/product-variants*') ? 'active' : '' }}">
-        <i class="fas fa-sliders-h"></i>
-        Product Variants
-    </a>
-@endcan
+                <a href="{{ route('admin.product-variants.index') }}"
+                   class="sub-link {{ request()->is('admin/product-variants*') ? 'active' : '' }}">
+                    <i class="fas fa-sliders-h"></i>
+                    Product Variants
+                </a>
+            @endcan
 
         </div>
     </div>
-@endif
+@endcanany
+
+
+{{-- CUSTOMER MANAGEMENT GROUP --}}
+@canany(['customer_access', 'customer_address_access'])
+    @php
+        $customerActive = request()->is('admin/customers*')
+            || request()->is('admin/customer-addresses*');
+    @endphp
+
+    <p class="sidebar-section-title nav-label">Customers</p>
+
+    <div x-data="{ open: {{ $customerActive ? 'true' : 'false' }} }">
+
+        <button type="button"
+                @click="open = !open"
+                data-tooltip="Customers"
+                class="nav-link nav-group-btn {{ $customerActive ? 'active' : '' }}">
+
+            <div class="nav-group-left">
+                <i class="fas fa-user-friends nav-icon"></i>
+                <span class="nav-label">Customer Management</span>
+            </div>
+
+            <i class="fas fa-chevron-right chevron"
+               :style="open ? 'transform:rotate(90deg)' : ''"></i>
+        </button>
+
+        <div class="submenu"
+             x-show="open"
+             x-transition:enter="transition ease-out duration-150"
+             x-transition:enter-start="opacity-0 -translate-y-1"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-100"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-1">
+
+            @can('customer_access')
+                <a href="{{ route('admin.customers.index') }}"
+                   class="sub-link {{ request()->is('admin/customers*') && !request()->is('admin/customer-addresses*') ? 'active' : '' }}">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+            @endcan
+
+            @can('customer_address_access')
+                <a href="{{ route('admin.customer-addresses.index') }}"
+                   class="sub-link {{ request()->is('admin/customer-addresses*') ? 'active' : '' }}">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Customer Addresses
+                </a>
+            @endcan
+
+        </div>
+    </div>
+@endcanany
+
 
         <div class="nav-divider"></div>
 

@@ -27,16 +27,24 @@ class User extends Authenticatable
 
     protected $dates = [
         'email_verified_at',
+        'mobile_verified_at',
         'created_at',
         'updated_at',
         'deleted_at',
+    ];
+
+    protected $casts = [
+        'status' => 'boolean',
     ];
 
     protected $fillable = [
         'name',
         'email',
         'email_verified_at',
+        'mobile',
+        'mobile_verified_at',
         'password',
+        'status',
         'remember_token',
         'created_at',
         'updated_at',
@@ -51,6 +59,31 @@ class User extends Authenticatable
     public function getIsAdminAttribute()
     {
         return $this->roles()->where('id', 1)->exists();
+    }
+
+    public function getDisplayEmailAttribute()
+    {
+        return Str::endsWith((string) $this->email, '@local.invalid') ? null : $this->email;
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function userAddresses()
+    {
+        return $this->hasMany(UserAddress::class, 'user_id');
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(UserAddress::class, 'user_id');
+    }
+
+    public function defaultAddress()
+    {
+        return $this->hasOne(UserAddress::class, 'user_id')->where('is_default', true);
     }
 
     public function __construct(array $attributes = [])
@@ -84,10 +117,5 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPassword($token));
-    }
-
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class);
     }
 }

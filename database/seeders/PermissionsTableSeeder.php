@@ -146,6 +146,58 @@ class PermissionsTableSeeder extends Seeder
                 'id'    => 34,
                 'title' => 'customer_address_access',
             ],
+            [
+                'id'    => 35,
+                'title' => 'delivery_boy_access',
+            ],
+            [
+                'id'    => 36,
+                'title' => 'delivery_boy_create',
+            ],
+            [
+                'id'    => 37,
+                'title' => 'delivery_boy_edit',
+            ],
+            [
+                'id'    => 38,
+                'title' => 'delivery_boy_show',
+            ],
+            [
+                'id'    => 39,
+                'title' => 'delivery_boy_delete',
+            ],
+            [
+                'id'    => 40,
+                'title' => 'order_access',
+            ],
+            [
+                'id'    => 41,
+                'title' => 'order_create',
+            ],
+            [
+                'id'    => 42,
+                'title' => 'order_edit',
+            ],
+            [
+                'id'    => 43,
+                'title' => 'order_show',
+            ],
+            [
+                'id'    => 44,
+                'title' => 'order_delete',
+            ],
+            [
+                'id'    => 45,
+                'title' => 'order_status_update',
+            ],
+            [
+                'id'    => 46,
+                'title' => 'order_payment_update',
+            ],
+            [
+                'id'    => 47,
+                'title' => 'order_assign_delivery',
+            ],
         ];
 
         Permission::insert($permissions);

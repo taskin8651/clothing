@@ -55,6 +55,17 @@ Route::resource('customers', 'CustomersController');
 Route::delete('customer-addresses/destroy', 'CustomerAddressesController@massDestroy')->name('customer-addresses.massDestroy');
 Route::resource('customer-addresses', 'CustomerAddressesController');
 
+// Delivery Boys
+Route::delete('delivery-boys/destroy', 'DeliveryBoysController@massDestroy')->name('delivery-boys.massDestroy');
+Route::delete('delivery-boys/{deliveryBoy}/media/{media}', 'DeliveryBoysController@removeMedia')->name('delivery-boys.removeMedia');
+Route::resource('delivery-boys', 'DeliveryBoysController')->parameters(['delivery-boys' => 'deliveryBoy']);
+
+// Orders
+Route::delete('orders/destroy', 'OrdersController@massDestroy')->name('orders.massDestroy');
+Route::post('orders/{order}/update-status', 'OrdersController@updateStatus')->name('orders.updateStatus');
+Route::post('orders/{order}/assign-delivery-boy', 'OrdersController@assignDeliveryBoy')->name('orders.assignDeliveryBoy');
+Route::resource('orders', 'OrdersController');
+
     
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
@@ -66,4 +77,3 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
         Route::post('profile/destroy', 'ChangePasswordController@destroy')->name('password.destroyProfile');
     }
 });
-

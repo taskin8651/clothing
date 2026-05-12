@@ -236,6 +236,96 @@
     </div>
 @endcanany
 
+{{-- DELIVERY MANAGEMENT GROUP --}}
+@canany(['delivery_boy_access'])
+    @php
+        $deliveryActive = request()->is('admin/delivery-boys*');
+    @endphp
+
+    <p class="sidebar-section-title nav-label">Delivery</p>
+
+    <div x-data="{ open: {{ $deliveryActive ? 'true' : 'false' }} }">
+
+        <button type="button"
+                @click="open = !open"
+                data-tooltip="Delivery"
+                class="nav-link nav-group-btn {{ $deliveryActive ? 'active' : '' }}">
+
+            <div class="nav-group-left">
+                <i class="fas fa-truck nav-icon"></i>
+                <span class="nav-label">Delivery Management</span>
+            </div>
+
+            <i class="fas fa-chevron-right chevron"
+               :style="open ? 'transform:rotate(90deg)' : ''"></i>
+        </button>
+
+        <div class="submenu"
+             x-show="open"
+             x-transition:enter="transition ease-out duration-150"
+             x-transition:enter-start="opacity-0 -translate-y-1"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-100"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-1">
+
+            @can('delivery_boy_access')
+                <a href="{{ route('admin.delivery-boys.index') }}"
+                   class="sub-link {{ request()->is('admin/delivery-boys*') ? 'active' : '' }}">
+                    <i class="fas fa-motorcycle"></i>
+                    Delivery Boys
+                </a>
+            @endcan
+
+        </div>
+    </div>
+@endcanany
+
+{{-- ORDER MANAGEMENT GROUP --}}
+@canany(['order_access'])
+    @php
+        $orderActive = request()->is('admin/orders*');
+    @endphp
+
+    <p class="sidebar-section-title nav-label">Orders</p>
+
+    <div x-data="{ open: {{ $orderActive ? 'true' : 'false' }} }">
+
+        <button type="button"
+                @click="open = !open"
+                data-tooltip="Orders"
+                class="nav-link nav-group-btn {{ $orderActive ? 'active' : '' }}">
+
+            <div class="nav-group-left">
+                <i class="fas fa-shopping-bag nav-icon"></i>
+                <span class="nav-label">Order Management</span>
+            </div>
+
+            <i class="fas fa-chevron-right chevron"
+               :style="open ? 'transform:rotate(90deg)' : ''"></i>
+        </button>
+
+        <div class="submenu"
+             x-show="open"
+             x-transition:enter="transition ease-out duration-150"
+             x-transition:enter-start="opacity-0 -translate-y-1"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-100"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-1">
+
+            @can('order_access')
+                <a href="{{ route('admin.orders.index') }}"
+                   class="sub-link {{ request()->is('admin/orders*') ? 'active' : '' }}">
+                    <i class="fas fa-receipt"></i>
+                    Orders
+                </a>
+            @endcan
+
+        </div>
+    </div>
+@endcanany
+
 
         <div class="nav-divider"></div>
 

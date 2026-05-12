@@ -168,6 +168,11 @@ class Order extends Model
         return $this->hasMany(Receipt::class, 'order_id');
     }
 
+    public function returnRequests()
+    {
+        return $this->hasMany(ReturnRequest::class, 'order_id');
+    }
+
     public function deliveryTracking()
     {
         return $this->hasOne(DeliveryTracking::class, 'order_id');

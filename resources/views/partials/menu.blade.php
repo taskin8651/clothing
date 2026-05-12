@@ -291,9 +291,10 @@
 @endcanany
 
 {{-- ORDER MANAGEMENT GROUP --}}
-@canany(['order_access'])
+@canany(['order_access', 'return_request_access'])
     @php
-        $orderActive = request()->is('admin/orders*');
+        $orderActive = request()->is('admin/orders*')
+            || request()->is('admin/return-requests*');
     @endphp
 
     <p class="sidebar-section-title nav-label">Orders</p>
@@ -328,6 +329,14 @@
                    class="sub-link {{ request()->is('admin/orders*') ? 'active' : '' }}">
                     <i class="fas fa-receipt"></i>
                     Orders
+                </a>
+            @endcan
+
+            @can('return_request_access')
+                <a href="{{ route('admin.return-requests.index') }}"
+                   class="sub-link {{ request()->is('admin/return-requests*') ? 'active' : '' }}">
+                    <i class="fas fa-undo-alt"></i>
+                    Return Requests
                 </a>
             @endcan
 

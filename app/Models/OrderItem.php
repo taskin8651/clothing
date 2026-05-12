@@ -56,6 +56,11 @@ class OrderItem extends Model
         return $this->belongsTo(Shop::class, 'shop_id');
     }
 
+    public function returnRequests()
+    {
+        return $this->hasMany(ReturnRequest::class, 'order_item_id');
+    }
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

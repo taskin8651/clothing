@@ -262,6 +262,12 @@ class PermissionsTableSeeder extends Seeder
             ['id' => 70, 'title' => 'receipt_show'],
             ['id' => 71, 'title' => 'receipt_delete'],
             ['id' => 72, 'title' => 'receipt_print'],
+            ['id' => 73, 'title' => 'return_request_access'],
+            ['id' => 74, 'title' => 'return_request_create'],
+            ['id' => 75, 'title' => 'return_request_edit'],
+            ['id' => 76, 'title' => 'return_request_show'],
+            ['id' => 77, 'title' => 'return_request_delete'],
+            ['id' => 78, 'title' => 'return_request_status_update'],
         ];
 
         Permission::insert($permissions);

@@ -56,6 +56,11 @@ class Shop extends Model
         return $this->hasMany(Receipt::class, 'shop_id');
     }
 
+    public function returnRequests()
+    {
+        return $this->hasMany(ReturnRequest::class, 'shop_id');
+    }
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

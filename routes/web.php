@@ -90,6 +90,11 @@ Route::post('receipts/generate-from-payment/{payment}', 'ReceiptsController@gene
 Route::get('receipts/{receipt}/print', 'ReceiptsController@print')->name('receipts.print');
 Route::resource('receipts', 'ReceiptsController');
 
+// Return Requests
+Route::delete('return-requests/destroy', 'ReturnRequestsController@massDestroy')->name('return-requests.massDestroy');
+Route::post('return-requests/{returnRequest}/update-status', 'ReturnRequestsController@updateStatus')->name('return-requests.updateStatus');
+Route::resource('return-requests', 'ReturnRequestsController')->parameters(['return-requests' => 'returnRequest']);
+
     
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

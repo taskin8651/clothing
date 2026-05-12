@@ -101,6 +101,11 @@ class User extends Authenticatable
         return $this->hasMany(Receipt::class, 'customer_id');
     }
 
+    public function returnRequests()
+    {
+        return $this->hasMany(ReturnRequest::class, 'customer_id');
+    }
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);

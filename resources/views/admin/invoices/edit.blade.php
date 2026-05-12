@@ -1,0 +1,7 @@
+@extends('layouts.admin')
+@section('page-title', 'Edit Invoice')
+@section('content')
+<div class="admin-page-head"><div><a href="{{ route('admin.invoices.index') }}" class="admin-back-link">&larr; {{ trans('global.back_to_list') }}</a><h2 class="admin-page-title">Edit Invoice</h2><p class="admin-page-subtitle">Update invoice details and status</p></div><div class="identity-card"><div class="identity-avatar" style="background:#4F46E5;"><i class="fas fa-file-invoice"></i></div><div><p class="identity-title">{{ $invoice->invoice_number }}</p><p class="identity-subtitle">Invoice ID #{{ $invoice->id }}</p></div></div></div>
+<form method="POST" action="{{ route('admin.invoices.update',$invoice->id) }}">@method('PUT')@csrf<div class="admin-form-grid">@include('admin.invoices.partials.form', ['invoice' => $invoice])</div><div class="form-actions-between"><div class="form-actions-left"><button class="btn-primary"><i class="fas fa-save"></i> Save Invoice</button><a href="{{ route('admin.invoices.index') }}" class="btn-ghost">Cancel</a></div>@can('invoice_delete')<button type="submit" form="delete-invoice-form" class="btn-danger"><i class="fas fa-trash-alt"></i> Delete Invoice</button>@endcan</div></form>
+@can('invoice_delete')<form id="delete-invoice-form" action="{{ route('admin.invoices.destroy',$invoice->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}')">@method('DELETE')@csrf</form>@endcan
+@endsection

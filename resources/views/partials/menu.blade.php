@@ -237,9 +237,10 @@
 @endcanany
 
 {{-- DELIVERY MANAGEMENT GROUP --}}
-@canany(['delivery_boy_access'])
+@canany(['delivery_boy_access', 'delivery_tracking_access'])
     @php
-        $deliveryActive = request()->is('admin/delivery-boys*');
+        $deliveryActive = request()->is('admin/delivery-boys*')
+            || request()->is('admin/delivery-trackings*');
     @endphp
 
     <p class="sidebar-section-title nav-label">Delivery</p>
@@ -274,6 +275,14 @@
                    class="sub-link {{ request()->is('admin/delivery-boys*') ? 'active' : '' }}">
                     <i class="fas fa-motorcycle"></i>
                     Delivery Boys
+                </a>
+            @endcan
+
+            @can('delivery_tracking_access')
+                <a href="{{ route('admin.delivery-trackings.index') }}"
+                   class="sub-link {{ request()->is('admin/delivery-trackings*') ? 'active' : '' }}">
+                    <i class="fas fa-route"></i>
+                    Delivery Trackings
                 </a>
             @endcan
 
@@ -322,6 +331,57 @@
                 </a>
             @endcan
 
+        </div>
+    </div>
+@endcanany
+
+{{-- FINANCE MANAGEMENT GROUP --}}
+@canany(['invoice_access', 'receipt_access', 'payment_access'])
+    @php
+        $financeActive = request()->is('admin/payments*')
+            || request()->is('admin/invoices*')
+            || request()->is('admin/receipts*');
+    @endphp
+
+    <p class="sidebar-section-title nav-label">Finance</p>
+
+    <div x-data="{ open: {{ $financeActive ? 'true' : 'false' }} }">
+        <button type="button"
+                @click="open = !open"
+                data-tooltip="Finance"
+                class="nav-link nav-group-btn {{ $financeActive ? 'active' : '' }}">
+            <div class="nav-group-left">
+                <i class="fas fa-wallet nav-icon"></i>
+                <span class="nav-label">Finance Management</span>
+            </div>
+            <i class="fas fa-chevron-right chevron"
+               :style="open ? 'transform:rotate(90deg)' : ''"></i>
+        </button>
+
+        <div class="submenu" x-show="open">
+            @can('payment_access')
+                <a href="{{ route('admin.payments.index') }}"
+                   class="sub-link {{ request()->is('admin/payments*') ? 'active' : '' }}">
+                    <i class="fas fa-credit-card"></i>
+                    Payments
+                </a>
+            @endcan
+
+            @can('invoice_access')
+                <a href="{{ route('admin.invoices.index') }}"
+                   class="sub-link {{ request()->is('admin/invoices*') ? 'active' : '' }}">
+                    <i class="fas fa-file-invoice"></i>
+                    Invoices
+                </a>
+            @endcan
+
+            @can('receipt_access')
+                <a href="{{ route('admin.receipts.index') }}"
+                   class="sub-link {{ request()->is('admin/receipts*') ? 'active' : '' }}">
+                    <i class="fas fa-receipt"></i>
+                    Receipts
+                </a>
+            @endcan
         </div>
     </div>
 @endcanany

@@ -198,6 +198,70 @@ class PermissionsTableSeeder extends Seeder
                 'id'    => 47,
                 'title' => 'order_assign_delivery',
             ],
+            [
+                'id'    => 48,
+                'title' => 'delivery_tracking_access',
+            ],
+            [
+                'id'    => 49,
+                'title' => 'delivery_tracking_create',
+            ],
+            [
+                'id'    => 50,
+                'title' => 'delivery_tracking_edit',
+            ],
+            [
+                'id'    => 51,
+                'title' => 'delivery_tracking_show',
+            ],
+            [
+                'id'    => 52,
+                'title' => 'delivery_tracking_delete',
+            ],
+            [
+                'id'    => 53,
+                'title' => 'delivery_tracking_status_update',
+            ],
+            [
+                'id'    => 54,
+                'title' => 'delivery_tracking_assign',
+            ],
+            [
+                'id'    => 55,
+                'title' => 'delivery_tracking_cod_update',
+            ],
+            [
+                'id'    => 56,
+                'title' => 'payment_access',
+            ],
+            [
+                'id'    => 57,
+                'title' => 'payment_edit',
+            ],
+            [
+                'id'    => 58,
+                'title' => 'payment_show',
+            ],
+            [
+                'id'    => 59,
+                'title' => 'payment_delete',
+            ],
+            [
+                'id'    => 60,
+                'title' => 'payment_status_update',
+            ],
+            ['id' => 61, 'title' => 'invoice_access'],
+            ['id' => 62, 'title' => 'invoice_create'],
+            ['id' => 63, 'title' => 'invoice_edit'],
+            ['id' => 64, 'title' => 'invoice_show'],
+            ['id' => 65, 'title' => 'invoice_delete'],
+            ['id' => 66, 'title' => 'invoice_print'],
+            ['id' => 67, 'title' => 'receipt_access'],
+            ['id' => 68, 'title' => 'receipt_create'],
+            ['id' => 69, 'title' => 'receipt_edit'],
+            ['id' => 70, 'title' => 'receipt_show'],
+            ['id' => 71, 'title' => 'receipt_delete'],
+            ['id' => 72, 'title' => 'receipt_print'],
         ];
 
         Permission::insert($permissions);

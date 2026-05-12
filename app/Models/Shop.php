@@ -41,6 +41,21 @@ class Shop extends Model
         return $this->hasMany(Product::class, 'shop_id');
     }
 
+    public function deliveryTrackings()
+    {
+        return $this->hasMany(DeliveryTracking::class, 'shop_id');
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'shop_id');
+    }
+
+    public function receipts()
+    {
+        return $this->hasMany(Receipt::class, 'shop_id');
+    }
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

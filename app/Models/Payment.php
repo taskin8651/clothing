@@ -11,6 +11,18 @@ class Payment extends Model
 {
     use SoftDeletes, HasFactory;
 
+    public const METHODS = [
+        'online' => 'Online',
+        'cod' => 'COD',
+    ];
+
+    public const STATUSES = [
+        'pending' => 'Pending',
+        'paid' => 'Paid',
+        'failed' => 'Failed',
+        'refunded' => 'Refunded',
+    ];
+
     public $table = 'payments';
 
     protected $fillable = [
@@ -33,6 +45,16 @@ class Payment extends Model
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id');
+    }
+
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class, 'invoice_id');
+    }
+
+    public function receipts()
+    {
+        return $this->hasMany(Receipt::class, 'payment_id');
     }
 
     protected function serializeDate(DateTimeInterface $date)

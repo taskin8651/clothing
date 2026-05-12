@@ -18,7 +18,11 @@ class PermissionRoleTableSeeder extends Seeder
                 && substr($permission->title, 0, 11) != 'permission_'
                 && substr($permission->title, 0, 9) != 'customer_'
                 && substr($permission->title, 0, 13) != 'delivery_boy_'
-                && substr($permission->title, 0, 6) != 'order_';
+                && substr($permission->title, 0, 18) != 'delivery_tracking_'
+                && substr($permission->title, 0, 6) != 'order_'
+                && substr($permission->title, 0, 8) != 'payment_'
+                && substr($permission->title, 0, 8) != 'invoice_'
+                && substr($permission->title, 0, 8) != 'receipt_';
         });
         Role::findOrFail(2)->permissions()->sync($user_permissions);
     }

@@ -66,6 +66,30 @@ Route::post('orders/{order}/update-status', 'OrdersController@updateStatus')->na
 Route::post('orders/{order}/assign-delivery-boy', 'OrdersController@assignDeliveryBoy')->name('orders.assignDeliveryBoy');
 Route::resource('orders', 'OrdersController');
 
+// Delivery Trackings
+Route::delete('delivery-trackings/destroy', 'DeliveryTrackingsController@massDestroy')->name('delivery-trackings.massDestroy');
+Route::post('delivery-trackings/{deliveryTracking}/update-status', 'DeliveryTrackingsController@updateStatus')->name('delivery-trackings.updateStatus');
+Route::post('delivery-trackings/{deliveryTracking}/assign-delivery-boy', 'DeliveryTrackingsController@assignDeliveryBoy')->name('delivery-trackings.assignDeliveryBoy');
+Route::post('delivery-trackings/{deliveryTracking}/mark-cod-collected', 'DeliveryTrackingsController@markCodCollected')->name('delivery-trackings.markCodCollected');
+Route::resource('delivery-trackings', 'DeliveryTrackingsController')->parameters(['delivery-trackings' => 'deliveryTracking']);
+
+// Payments
+Route::delete('payments/destroy', 'PaymentsController@massDestroy')->name('payments.massDestroy');
+Route::post('payments/{payment}/update-status', 'PaymentsController@updateStatus')->name('payments.updateStatus');
+Route::resource('payments', 'PaymentsController')->except(['create', 'store']);
+
+// Invoices
+Route::delete('invoices/destroy', 'InvoicesController@massDestroy')->name('invoices.massDestroy');
+Route::post('invoices/generate-from-order/{order}', 'InvoicesController@generateFromOrder')->name('invoices.generateFromOrder');
+Route::get('invoices/{invoice}/print', 'InvoicesController@print')->name('invoices.print');
+Route::resource('invoices', 'InvoicesController');
+
+// Receipts
+Route::delete('receipts/destroy', 'ReceiptsController@massDestroy')->name('receipts.massDestroy');
+Route::post('receipts/generate-from-payment/{payment}', 'ReceiptsController@generateFromPayment')->name('receipts.generateFromPayment');
+Route::get('receipts/{receipt}/print', 'ReceiptsController@print')->name('receipts.print');
+Route::resource('receipts', 'ReceiptsController');
+
     
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

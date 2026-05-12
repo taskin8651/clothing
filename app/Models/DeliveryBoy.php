@@ -97,6 +97,11 @@ class DeliveryBoy extends Authenticatable implements HasMedia
         }
     }
 
+    public function deliveryTrackings()
+    {
+        return $this->hasMany(DeliveryTracking::class, 'delivery_boy_id');
+    }
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

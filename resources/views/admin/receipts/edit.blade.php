@@ -1,0 +1,7 @@
+@extends('layouts.admin')
+@section('page-title','Edit Receipt')
+@section('content')
+<div class="admin-page-head"><div><a href="{{ route('admin.receipts.index') }}" class="admin-back-link">&larr; {{ trans('global.back_to_list') }}</a><h2 class="admin-page-title">Edit Receipt</h2><p class="admin-page-subtitle">Update receipt details</p></div><div class="identity-card"><div class="identity-avatar" style="background:#4F46E5;"><i class="fas fa-receipt"></i></div><div><p class="identity-title">{{ $receipt->receipt_number }}</p><p class="identity-subtitle">Receipt ID #{{ $receipt->id }}</p></div></div></div>
+<form method="POST" action="{{ route('admin.receipts.update',$receipt->id) }}">@method('PUT')@csrf<div class="admin-form-grid">@include('admin.receipts.partials.form',['receipt'=>$receipt])</div><div class="form-actions-between"><div class="form-actions-left"><button class="btn-primary"><i class="fas fa-save"></i> Save Receipt</button><a href="{{ route('admin.receipts.index') }}" class="btn-ghost">Cancel</a></div>@can('receipt_delete')<button type="submit" form="delete-receipt-form" class="btn-danger"><i class="fas fa-trash-alt"></i> Delete Receipt</button>@endcan</div></form>
+@can('receipt_delete')<form id="delete-receipt-form" action="{{ route('admin.receipts.destroy',$receipt->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}')">@method('DELETE')@csrf</form>@endcan
+@endsection

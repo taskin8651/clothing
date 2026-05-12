@@ -50,6 +50,26 @@
                 @can('order_edit')
                     <a href="{{ route('admin.orders.edit', $order->id) }}" class="quick-link primary"><i class="fas fa-pencil-alt"></i> Edit Order</a>
                 @endcan
+                @if($order->latestInvoice)
+                    @can('invoice_show')
+                        <a href="{{ route('admin.invoices.show', $order->latestInvoice->id) }}" class="quick-link"><i class="fas fa-file-invoice"></i> View Invoice</a>
+                    @endcan
+                @else
+                    @can('invoice_create')
+                        <form method="POST" action="{{ route('admin.invoices.generateFromOrder', $order->id) }}">
+                            @csrf
+                            <button type="submit" class="quick-link" style="width:100%;border:0;text-align:left;"><i class="fas fa-file-invoice"></i> Generate Invoice</button>
+                        </form>
+                    @endcan
+                @endif
+                @if($order->latestPayment && ! $order->latestPayment->receipts()->exists())
+                    @can('receipt_create')
+                        <form method="POST" action="{{ route('admin.receipts.generateFromPayment', $order->latestPayment->id) }}">
+                            @csrf
+                            <button type="submit" class="quick-link" style="width:100%;border:0;text-align:left;"><i class="fas fa-receipt"></i> Generate Receipt</button>
+                        </form>
+                    @endcan
+                @endif
                 <a href="{{ route('admin.orders.index') }}" class="quick-link"><i class="fas fa-list"></i> Back to list</a>
             </div>
         </div>

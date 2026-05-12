@@ -148,6 +148,31 @@ class Order extends Model
         return $this->hasMany(Payment::class, 'order_id');
     }
 
+    public function latestPayment()
+    {
+        return $this->hasOne(Payment::class, 'order_id')->latestOfMany();
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'order_id');
+    }
+
+    public function latestInvoice()
+    {
+        return $this->hasOne(Invoice::class, 'order_id')->latestOfMany();
+    }
+
+    public function receipts()
+    {
+        return $this->hasMany(Receipt::class, 'order_id');
+    }
+
+    public function deliveryTracking()
+    {
+        return $this->hasOne(DeliveryTracking::class, 'order_id');
+    }
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

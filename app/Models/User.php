@@ -86,6 +86,21 @@ class User extends Authenticatable
         return $this->hasOne(UserAddress::class, 'user_id')->where('is_default', true);
     }
 
+    public function deliveryTrackings()
+    {
+        return $this->hasMany(DeliveryTracking::class, 'customer_id');
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'customer_id');
+    }
+
+    public function receipts()
+    {
+        return $this->hasMany(Receipt::class, 'customer_id');
+    }
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);

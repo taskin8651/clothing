@@ -95,6 +95,16 @@ Route::delete('return-requests/destroy', 'ReturnRequestsController@massDestroy')
 Route::post('return-requests/{returnRequest}/update-status', 'ReturnRequestsController@updateStatus')->name('return-requests.updateStatus');
 Route::resource('return-requests', 'ReturnRequestsController')->parameters(['return-requests' => 'returnRequest']);
 
+// Settings
+Route::get('settings', 'SettingsController@index')->name('settings.index');
+Route::post('settings', 'SettingsController@update')->name('settings.update');
+
+// Notifications
+Route::delete('notifications/destroy', 'NotificationsController@massDestroy')->name('notifications.massDestroy');
+Route::post('notifications/mark-all-read', 'NotificationsController@markAllRead')->name('notifications.markAllRead');
+Route::post('notifications/{notification}/mark-read', 'NotificationsController@markRead')->name('notifications.markRead');
+Route::resource('notifications', 'NotificationsController')->only(['index', 'show', 'destroy']);
+
     
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

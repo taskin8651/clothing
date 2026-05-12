@@ -413,12 +413,14 @@
         @endif
 
         {{-- Settings --}}
-        <a href="#"
-           data-tooltip="Settings"
-           class="nav-link">
-            <i class="fas fa-cog nav-icon"></i>
-            <span class="nav-label">Settings</span>
-        </a>
+       @can('setting_access')
+    <a href="{{ route('admin.settings.index') }}"
+       data-tooltip="Settings"
+       class="nav-link {{ request()->is('admin/settings*') ? 'active' : '' }}">
+        <i class="fas fa-cog nav-icon"></i>
+        <span class="nav-label">Settings</span>
+    </a>
+@endcan
 
     </nav>
 

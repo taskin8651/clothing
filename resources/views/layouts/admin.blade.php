@@ -139,11 +139,7 @@
                     </div>
                 @endif
 
-                {{-- Notifications --}}
-                <button type="button" class="header-btn notification-btn">
-                    <i class="fas fa-bell"></i>
-                    <span class="notif-dot"></span>
-                </button>
+             
 
                 {{-- User dropdown --}}
                 <div x-data="{ open:false }" class="relative">

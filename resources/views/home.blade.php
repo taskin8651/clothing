@@ -1,646 +1,392 @@
 @extends('layouts.admin')
 
 @section('styles')
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    :root {
-        --accent:       #4F46E5;
-        --accent-light: #EEF2FF;
-        --accent-dark:  #3730A3;
-        --sidebar-bg:   #0F172A;
-    }
-    * { font-family: 'Plus Jakarta Sans', sans-serif; }
-
-    /* ── Stat Cards ── */
-    .stat-card {
-        background: #fff;
-        border-radius: 14px;
-        padding: 1.25rem 1.5rem;
-        border: 1px solid #E5E7EB;
-        position: relative;
-        overflow: hidden;
-        transition: transform .2s, box-shadow .2s;
-    }
-    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,.08); }
-    .stat-card .icon-wrap {
-        width: 48px; height: 48px; border-radius: 12px;
-        display: flex; align-items: center; justify-content: center;
-        background: var(--accent-light); color: var(--accent);
-        font-size: 20px;
-    }
-    .stat-card .badge-up   { color: #16A34A; background: #DCFCE7; }
-    .stat-card .badge-down { color: #DC2626; background: #FEE2E2; }
-    .stat-card .badge { padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-
-    /* ── Chart Card ── */
-    .chart-card {
-        background: #fff;
-        border-radius: 14px;
-        padding: 1.25rem 1.5rem;
-        border: 1px solid #E5E7EB;
-    }
-
-    /* ── Table ── */
-    .dash-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-    .dash-table th { background: #F8FAFC; color: #6B7280; font-weight: 600; font-size: 12px;
-                     text-transform: uppercase; letter-spacing: .05em; padding: 10px 16px; border-bottom: 1px solid #E5E7EB; }
-    .dash-table td { padding: 11px 16px; border-bottom: 1px solid #F3F4F6; color: #374151; vertical-align: middle; }
-    .dash-table tr:last-child td { border-bottom: none; }
-    .dash-table tr:hover td { background: #F9FAFB; }
-
-    /* ── Status Pill ── */
-    .pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px;
-            border-radius: 20px; font-size: 12px; font-weight: 600; }
-    .pill-green  { background: #DCFCE7; color: #15803D; }
-    .pill-yellow { background: #FEF9C3; color: #A16207; }
-    .pill-red    { background: #FEE2E2; color: #B91C1C; }
-    .pill-blue   { background: #DBEAFE; color: #1D4ED8; }
-
-    /* ── Avatar ── */
-    .avatar { width: 32px; height: 32px; border-radius: 50%; display: inline-flex;
-              align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
-              color: #fff; background: var(--accent); flex-shrink: 0; }
-
-    /* ── Theme Panel ── */
-    #theme-panel {
-        position: fixed; right: -280px; top: 0; height: 100vh; width: 280px; z-index: 999;
-        background: #fff; box-shadow: -4px 0 30px rgba(0,0,0,.12);
-        transition: right .3s ease; padding: 0;
-        display: flex; flex-direction: column;
-    }
-    #theme-panel.open { right: 0; }
-    #theme-toggle-btn {
-        position: fixed; right: 0; top: 50%; transform: translateY(-50%);
-        background: var(--accent); color: #fff; border: none; cursor: pointer;
-        padding: 14px 10px; border-radius: 10px 0 0 10px; z-index: 1000;
-        font-size: 16px; box-shadow: -2px 2px 12px rgba(0,0,0,.2);
-        transition: background .2s;
-    }
-    .color-swatch {
-        width: 32px; height: 32px; border-radius: 8px; cursor: pointer; border: 3px solid transparent;
-        transition: transform .15s, border-color .15s; display: inline-block;
-    }
-    .color-swatch:hover { transform: scale(1.1); }
-    .color-swatch.active { border-color: #374151 !important; }
-
-    /* ── Welcome Banner ── */
-    .welcome-banner {
-        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-        border-radius: 16px; padding: 1.5rem 2rem; color: #fff; position: relative; overflow: hidden;
-    }
-    .welcome-banner::before {
-        content: ''; position: absolute; width: 200px; height: 200px; border-radius: 50%;
-        background: rgba(255,255,255,.08); right: -40px; top: -60px;
-    }
-    .welcome-banner::after {
-        content: ''; position: absolute; width: 120px; height: 120px; border-radius: 50%;
-        background: rgba(255,255,255,.06); right: 80px; top: 20px;
-    }
-
-    /* ── Mini Progress ── */
-    .progress-bar { height: 6px; background: #E5E7EB; border-radius: 3px; overflow: hidden; }
-    .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width .6s ease; }
-
-    /* ── Responsive ── */
-    @media(max-width: 768px) {
-        .stat-grid { grid-template-columns: 1fr 1fr !important; }
-        .chart-grid { grid-template-columns: 1fr !important; }
-    }
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .dashboard-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-bottom: 20px; }
+    .dashboard-table-wrap { overflow-x: auto; }
+    .dashboard-table { width: 100%; border-collapse: collapse; }
+    .dashboard-table th { background: #F8FAFC; color: #64748B; font-size: 12px; font-weight: 700; padding: 12px 14px; text-align: left; text-transform: uppercase; }
+    .dashboard-table td { border-top: 1px solid #EEF2F7; color: #334155; font-size: 13px; padding: 12px 14px; vertical-align: middle; }
+    .dashboard-table tr:hover td { background: #FBFCFE; }
+    .dashboard-section { margin-bottom: 22px; }
+    .table-main-text { color: #0F172A; font-weight: 700; margin: 0; }
+    .table-sub-text { color: #64748B; font-size: 12px; margin: 2px 0 0; }
+    .status-pill { align-items: center; border-radius: 999px; display: inline-flex; font-size: 12px; font-weight: 700; gap: 6px; padding: 4px 10px; text-transform: capitalize; white-space: nowrap; }
+    .status-dot { border-radius: 999px; display: inline-block; height: 7px; width: 7px; }
+    .status-success { background: #DCFCE7; color: #166534; }
+    .status-warning { background: #FEF3C7; color: #92400E; }
+    .status-danger { background: #FEE2E2; color: #991B1B; }
+    .status-info { background: #E0F2FE; color: #075985; }
+    .status-muted { background: #F1F5F9; color: #475569; }
+    .status-success .status-dot { background: #16A34A; }
+    .status-warning .status-dot { background: #F59E0B; }
+    .status-danger .status-dot { background: #DC2626; }
+    .status-info .status-dot { background: #0284C7; }
+    .status-muted .status-dot { background: #64748B; }
+    .code-pill { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 999px; color: #334155; display: inline-flex; font-size: 12px; font-weight: 700; padding: 4px 9px; white-space: nowrap; }
+    .quick-link { color: #4F46E5; font-size: 13px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+    .quick-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .metric-note { color: #64748B; font-size: 12px; margin-top: 5px; }
+    @media (max-width: 900px) { .dashboard-split { grid-template-columns: 1fr; } }
 </style>
 @endsection
 
 @section('content')
+@php
+    $money = fn ($amount) => 'Rs. ' . number_format((float) $amount, 2);
+    $number = fn ($amount) => number_format((float) $amount);
+    $statusClass = function ($status) {
+        return match ($status) {
+            'paid', 'delivered', 'approved', 'assigned', 'picked_up', 'out_for_delivery' => 'status-success',
+            'pending', 'requested', 'confirmed', 'packed', 'pickup_pending', 'refunded', 'returned' => 'status-warning',
+            'failed', 'failed_delivery', 'rejected', 'cancelled' => 'status-danger',
+            'online', 'cod' => 'status-info',
+            default => 'status-muted',
+        };
+    };
+    $statusLabel = fn ($status) => $status ? ucwords(str_replace('_', ' ', $status)) : 'Not Set';
+@endphp
 
-{{-- ═══════════════════════════════════════════
-     THEME CUSTOMIZER PANEL
-════════════════════════════════════════════ --}}
-<button id="theme-toggle-btn" onclick="toggleTheme()" title="Customize Theme">
-    <i class="fas fa-palette"></i>
-</button>
-
-<div id="theme-panel">
-    <div style="background: var(--accent); color:#fff; padding: 1rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
-        <div>
-            <p style="font-weight:700; font-size:15px; margin:0;">Theme Customizer</p>
-            <p style="font-size:12px; opacity:.8; margin:0;">Personalize your dashboard</p>
-        </div>
-        <button onclick="toggleTheme()" style="background:rgba(255,255,255,.2); border:none; color:#fff; width:28px; height:28px; border-radius:6px; cursor:pointer; font-size:14px;">✕</button>
-    </div>
-
-    <div style="padding: 1.25rem; overflow-y:auto; flex:1;">
-
-        {{-- Accent Color --}}
-        <p style="font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 10px;">Accent Color</p>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem;">
-            <div class="color-swatch active" style="background:#4F46E5;" data-accent="#4F46E5" data-light="#EEF2FF" data-dark="#3730A3" onclick="setAccent(this)"></div>
-            <div class="color-swatch" style="background:#0EA5E9;" data-accent="#0EA5E9" data-light="#E0F2FE" data-dark="#0284C7" onclick="setAccent(this)"></div>
-            <div class="color-swatch" style="background:#10B981;" data-accent="#10B981" data-light="#D1FAE5" data-dark="#059669" onclick="setAccent(this)"></div>
-            <div class="color-swatch" style="background:#F59E0B;" data-accent="#F59E0B" data-light="#FEF3C7" data-dark="#D97706" onclick="setAccent(this)"></div>
-            <div class="color-swatch" style="background:#EF4444;" data-accent="#EF4444" data-light="#FEE2E2" data-dark="#DC2626" onclick="setAccent(this)"></div>
-            <div class="color-swatch" style="background:#8B5CF6;" data-accent="#8B5CF6" data-light="#EDE9FE" data-dark="#7C3AED" onclick="setAccent(this)"></div>
-            <div class="color-swatch" style="background:#EC4899;" data-accent="#EC4899" data-light="#FCE7F3" data-dark="#DB2777" onclick="setAccent(this)"></div>
-            <div class="color-swatch" style="background:#14B8A6;" data-accent="#14B8A6" data-light="#CCFBF1" data-dark="#0F766E" onclick="setAccent(this)"></div>
-            <div class="color-swatch" style="background:#F97316;" data-accent="#F97316" data-light="#FFEDD5" data-dark="#EA580C" onclick="setAccent(this)"></div>
-        </div>
-
-        {{-- Custom Color Picker --}}
-        <div style="margin-bottom: 1.5rem;">
-            <p style="font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 8px;">Custom Color</p>
-            <div style="display:flex; gap:8px; align-items:center;">
-                <input type="color" id="custom-color" value="#4F46E5"
-                       style="width:42px; height:38px; border:1px solid #E5E7EB; border-radius:8px; cursor:pointer; padding:2px;"
-                       oninput="applyCustomColor(this.value)">
-                <span id="hex-display" style="font-size:13px; font-weight:600; color:#374151; font-family:monospace;">#4F46E5</span>
-            </div>
-        </div>
-
-        {{-- Sidebar Style --}}
-        <p style="font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 10px;">Background Style</p>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.5rem;">
-            <button onclick="setBg('bg-gray-100')" id="bg-gray" class="theme-bg-btn active-bg"
-                style="padding: 8px; border-radius: 8px; border: 2px solid var(--accent); background: #F3F4F6; font-size: 12px; font-weight: 600; cursor:pointer; color: #374151;">
-                ☁ Light Gray
-            </button>
-            <button onclick="setBg('bg-white')" id="bg-white"
-                style="padding: 8px; border-radius: 8px; border: 2px solid #E5E7EB; background: #fff; font-size: 12px; font-weight: 600; cursor:pointer; color: #374151;">
-                ◻ White
-            </button>
-            <button onclick="setBg('bg-slate-800')" id="bg-dark"
-                style="padding: 8px; border-radius: 8px; border: 2px solid #E5E7EB; background: #1E293B; font-size: 12px; font-weight: 600; cursor:pointer; color: #fff;">
-                ◾ Dark
-            </button>
-            <button onclick="setBg('bg-blue-50')" id="bg-blue"
-                style="padding: 8px; border-radius: 8px; border: 2px solid #E5E7EB; background: #EFF6FF; font-size: 12px; font-weight: 600; cursor:pointer; color: #1D4ED8;">
-                💧 Blue Tint
-            </button>
-        </div>
-
-        {{-- Font Size --}}
-        <p style="font-size: 12px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 8px;">Interface Size</p>
-        <div style="display: flex; gap: 6px; margin-bottom: 1.5rem;">
-            <button onclick="setSize('compact')"   style="flex:1; padding:7px; border-radius:8px; border:1.5px solid #E5E7EB; font-size:12px; cursor:pointer; background:#fff; font-weight:600;">Compact</button>
-            <button onclick="setSize('default')"   style="flex:1; padding:7px; border-radius:8px; border:1.5px solid var(--accent); font-size:12px; cursor:pointer; background:var(--accent-light); font-weight:600; color:var(--accent);">Default</button>
-            <button onclick="setSize('spacious')"  style="flex:1; padding:7px; border-radius:8px; border:1.5px solid #E5E7EB; font-size:12px; cursor:pointer; background:#fff; font-weight:600;">Spacious</button>
-        </div>
-
-        <button onclick="resetTheme()"
-            style="width:100%; padding:10px; background:#F3F4F6; border:none; border-radius:10px; font-size:13px; font-weight:600; color:#6B7280; cursor:pointer;">
-            ↺ Reset to Default
-        </button>
-    </div>
-</div>
-
-{{-- ═══════════════════════════════════════════
-     PAGE HEADER
-════════════════════════════════════════════ --}}
-<div class="flex items-center justify-between mb-6">
+<div class="admin-page-head">
     <div>
-        <h2 style="font-size:22px; font-weight:700; color:#111827; margin:0;">Dashboard</h2>
-        <p style="font-size:13px; color:#6B7280; margin:4px 0 0;">
-            Welcome back, <strong>{{ auth()->user()->name }}</strong> — here's what's happening today.
-        </p>
+        <h1 class="admin-page-title">Dashboard</h1>
+        <p class="admin-page-subtitle">Marketplace overview, orders, payments, deliveries and returns</p>
     </div>
-    <div class="flex items-center gap-3">
-        <span style="font-size:12px; color:#9CA3AF;">
-            <i class="fas fa-clock mr-1"></i>
-            {{ now()->format('D, d M Y') }}
-        </span>
-        <button style="background:var(--accent); color:#fff; border:none; padding: 8px 16px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
-            <i class="fas fa-download"></i> Export
-        </button>
+    <div class="quick-list">
+        @can('order_access')
+            <a href="{{ route('admin.orders.index') }}" class="btn-outline">Orders</a>
+        @endcan
+        @can('payment_access')
+            <a href="{{ route('admin.payments.index') }}" class="btn-outline">Payments</a>
+        @endcan
     </div>
 </div>
 
-{{-- ═══════════════════════════════════════════
-     WELCOME BANNER
-════════════════════════════════════════════ --}}
-<div class="welcome-banner mb-6">
-    <div style="position:relative; z-index:1;">
-        <p style="font-size:20px; font-weight:700; margin:0 0 4px;">Good {{ now()->hour < 12 ? 'Morning' : (now()->hour < 17 ? 'Afternoon' : 'Evening') }}, {{ explode(' ', auth()->user()->name)[0] }}! 👋</p>
-        <p style="font-size:13px; opacity:.85; margin:0 0 16px;">Your admin panel is running smoothly. Here's a summary of today's activity.</p>
-        <div style="display:flex; gap:16px; flex-wrap:wrap;">
-            <div style="background:rgba(255,255,255,.15); padding:8px 16px; border-radius:10px; backdrop-filter:blur(4px);">
-                <span style="font-size:11px; opacity:.8; display:block;">Total Users</span>
-                <span style="font-size:18px; font-weight:700;">1,284</span>
+<div class="stats-grid dashboard-section">
+    <div class="stat-card">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value">{{ $number($total_orders) }}</div>
+        <div class="metric-note">{{ $number($confirmed_orders) }} confirmed</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Today Orders</div>
+        <div class="stat-value">{{ $number($today_orders) }}</div>
+        <div class="metric-note">{{ now()->format('d M Y') }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value">{{ $money($total_revenue) }}</div>
+        <div class="metric-note">{{ $money($current_month_revenue) }} this month</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Pending Payments</div>
+        <div class="stat-value">{{ $number($pending_payments) }}</div>
+        <div class="metric-note">{{ $money($cod_pending_amount) }} COD pending</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Delivered Orders</div>
+        <div class="stat-value">{{ $number($delivered_orders) }}</div>
+        <div class="metric-note">{{ $number($cancelled_orders) }} cancelled</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Return Requests</div>
+        <div class="stat-value">{{ $number($total_return_requests) }}</div>
+        <div class="metric-note">{{ $number($requested_returns) }} requested</div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="page-card">
+        <div class="page-card-header">
+            <div>
+                <h2 class="page-card-title">Sales & Payment Summary</h2>
+                <p class="page-card-note">Revenue and payment health</p>
             </div>
-            <div style="background:rgba(255,255,255,.15); padding:8px 16px; border-radius:10px;">
-                <span style="font-size:11px; opacity:.8; display:block;">Active Now</span>
-                <span style="font-size:18px; font-weight:700;">42</span>
+        </div>
+        <div class="quick-list">
+            <span class="code-pill">Paid Revenue: {{ $money($total_revenue) }}</span>
+            <span class="code-pill">Today: {{ $money($today_revenue) }}</span>
+            <span class="code-pill">COD Pending: {{ $money($cod_pending_amount) }}</span>
+            <span class="code-pill">Online Paid: {{ $money($online_paid_amount) }}</span>
+            <span class="code-pill">Refunded: {{ $money($refunded_amount) }}</span>
+        </div>
+    </div>
+
+    <div class="page-card">
+        <div class="page-card-header">
+            <div>
+                <h2 class="page-card-title">Operations Summary</h2>
+                <p class="page-card-note">Delivery pipeline status</p>
             </div>
-            <div style="background:rgba(255,255,255,.15); padding:8px 16px; border-radius:10px;">
-                <span style="font-size:11px; opacity:.8; display:block;">Today's Logins</span>
-                <span style="font-size:18px; font-weight:700;">138</span>
+        </div>
+        <div class="quick-list">
+            <span class="code-pill">Assigned: {{ $number($assigned_deliveries) }}</span>
+            <span class="code-pill">Out For Delivery: {{ $number($out_for_delivery_count) }}</span>
+            <span class="code-pill">Delivered: {{ $number($delivered_deliveries) }}</span>
+            <span class="code-pill">Failed: {{ $number($failed_deliveries) }}</span>
+            <span class="code-pill">COD Pending: {{ $number($cod_pending_deliveries) }}</span>
+        </div>
+    </div>
+
+    <div class="page-card">
+        <div class="page-card-header">
+            <div>
+                <h2 class="page-card-title">Inventory Summary</h2>
+                <p class="page-card-note">Product and stock overview</p>
             </div>
+        </div>
+        <div class="quick-list">
+            <span class="code-pill">Products: {{ $number($total_products) }}</span>
+            <span class="code-pill">Active: {{ $number($active_products) }}</span>
+            <span class="code-pill">Variants: {{ $number($total_variants) }}</span>
+            <span class="code-pill">Low Stock: {{ $number($low_stock_products) }}</span>
+            <span class="code-pill">Out Of Stock: {{ $number($out_of_stock_products) }}</span>
+        </div>
+    </div>
+
+    <div class="page-card">
+        <div class="page-card-header">
+            <div>
+                <h2 class="page-card-title">Customers & Finance</h2>
+                <p class="page-card-note">Customer, invoice and receipt totals</p>
+            </div>
+        </div>
+        <div class="quick-list">
+            <span class="code-pill">Customers: {{ $number($total_customers) }}</span>
+            <span class="code-pill">Active: {{ $number($active_customers) }}</span>
+            <span class="code-pill">With Address: {{ $number($customers_with_addresses) }}</span>
+            <span class="code-pill">Due: {{ $money($total_due_amount) }}</span>
+            <span class="code-pill">Received: {{ $money($total_received_amount) }}</span>
         </div>
     </div>
 </div>
 
-{{-- ═══════════════════════════════════════════
-     STAT CARDS
-════════════════════════════════════════════ --}}
-<div class="stat-grid mb-6" style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px;">
-
-    <div class="stat-card">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+<div class="dashboard-split">
+    <div class="page-card">
+        <div class="page-card-header">
             <div>
-                <p style="font-size:12px; color:#6B7280; font-weight:600; margin:0 0 6px; text-transform:uppercase; letter-spacing:.05em;">Total Users</p>
-                <p style="font-size:26px; font-weight:700; color:#111827; margin:0 0 8px; line-height:1;">1,284</p>
-                <span class="badge badge-up">↑ 12.5% this month</span>
+                <h2 class="page-card-title">Recent Orders</h2>
+                <p class="page-card-note">Latest 8 marketplace orders</p>
             </div>
-            <div class="icon-wrap"><i class="fas fa-users"></i></div>
+            @can('order_access')
+                <a href="{{ route('admin.orders.index') }}" class="quick-link">View all</a>
+            @endcan
         </div>
-        <div class="progress-bar mt-3"><div class="progress-bar-fill" style="width:72%"></div></div>
+        <div class="page-card-table dashboard-table-wrap">
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Order Number</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($recent_orders as $order)
+                        <tr>
+                            <td>
+                                <p class="table-main-text">{{ $order->order_number }}</p>
+                                <p class="table-sub-text">{{ optional($order->shop)->name ?? 'No shop' }}</p>
+                            </td>
+                            <td>{{ $order->customer_name ?: optional($order->customer)->name ?: 'Customer' }}</td>
+                            <td>{{ $money($order->total_amount) }}</td>
+                            <td><span class="status-pill {{ $statusClass($order->payment_status) }}"><span class="status-dot"></span>{{ $statusLabel($order->payment_status) }}</span></td>
+                            <td><span class="status-pill {{ $statusClass($order->order_status) }}"><span class="status-dot"></span>{{ $statusLabel($order->order_status) }}</span></td>
+                            <td>{{ optional($order->created_at)->format('d M Y') }}</td>
+                            <td>
+                                @can('order_show')
+                                    <a href="{{ route('admin.orders.show', $order) }}" class="btn-outline">Open</a>
+                                @endcan
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="7">No recent orders found.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="stat-card">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+    <div class="page-card">
+        <div class="page-card-header">
             <div>
-                <p style="font-size:12px; color:#6B7280; font-weight:600; margin:0 0 6px; text-transform:uppercase; letter-spacing:.05em;">Total Roles</p>
-                <p style="font-size:26px; font-weight:700; color:#111827; margin:0 0 8px; line-height:1;">8</p>
-                <span class="badge" style="background:#F3F4F6; color:#374151;">2 added recently</span>
+                <h2 class="page-card-title">Recent Payments</h2>
+                <p class="page-card-note">Latest transaction records</p>
             </div>
-            <div class="icon-wrap" style="background:#F0FDF4; color:#16A34A;"><i class="fas fa-shield-alt"></i></div>
+            @can('payment_access')
+                <a href="{{ route('admin.payments.index') }}" class="quick-link">View all</a>
+            @endcan
         </div>
-        <div class="progress-bar mt-3"><div class="progress-bar-fill" style="width:40%; background:#16A34A;"></div></div>
-    </div>
-
-    <div class="stat-card">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div>
-                <p style="font-size:12px; color:#6B7280; font-weight:600; margin:0 0 6px; text-transform:uppercase; letter-spacing:.05em;">Permissions</p>
-                <p style="font-size:26px; font-weight:700; color:#111827; margin:0 0 8px; line-height:1;">64</p>
-                <span class="badge" style="background:#FEF3C7; color:#92400E;">Active & assigned</span>
-            </div>
-            <div class="icon-wrap" style="background:#FFFBEB; color:#D97706;"><i class="fas fa-lock"></i></div>
+        <div class="page-card-table dashboard-table-wrap">
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Method</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Paid At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($recent_payments as $payment)
+                        <tr>
+                            <td>{{ optional($payment->order)->order_number ?? 'No order' }}</td>
+                            <td><span class="code-pill">{{ strtoupper($payment->payment_method ?? 'N/A') }}</span></td>
+                            <td>{{ $money($payment->amount) }}</td>
+                            <td><span class="status-pill {{ $statusClass($payment->status) }}"><span class="status-dot"></span>{{ $statusLabel($payment->status) }}</span></td>
+                            <td>{{ optional($payment->paid_at)->format('d M Y') ?: '-' }}</td>
+                            <td>
+                                @can('payment_show')
+                                    <a href="{{ route('admin.payments.show', $payment) }}" class="btn-outline">Open</a>
+                                @endcan
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="6">No recent payments found.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-        <div class="progress-bar mt-3"><div class="progress-bar-fill" style="width:88%; background:#D97706;"></div></div>
     </div>
-
-    <div class="stat-card">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div>
-                <p style="font-size:12px; color:#6B7280; font-weight:600; margin:0 0 6px; text-transform:uppercase; letter-spacing:.05em;">Audit Logs</p>
-                <p style="font-size:26px; font-weight:700; color:#111827; margin:0 0 8px; line-height:1;">5,918</p>
-                <span class="badge badge-down">↑ 3.2% today</span>
-            </div>
-            <div class="icon-wrap" style="background:#FFF1F2; color:#E11D48;"><i class="fas fa-history"></i></div>
-        </div>
-        <div class="progress-bar mt-3"><div class="progress-bar-fill" style="width:55%; background:#E11D48;"></div></div>
-    </div>
-
 </div>
 
-{{-- ═══════════════════════════════════════════
-     CHARTS ROW
-════════════════════════════════════════════ --}}
-<div class="chart-grid mb-6" style="display:grid; grid-template-columns:2fr 1fr; gap:16px;">
-
-    {{-- Line Chart --}}
-    <div class="chart-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+<div class="dashboard-split">
+    <div class="page-card">
+        <div class="page-card-header">
             <div>
-                <p style="font-size:15px; font-weight:700; color:#111827; margin:0;">User Registrations</p>
-                <p style="font-size:12px; color:#9CA3AF; margin:3px 0 0;">Last 7 days activity</p>
+                <h2 class="page-card-title">Recent Deliveries</h2>
+                <p class="page-card-note">Delivery tracking movement</p>
             </div>
-            <div style="display:flex; gap:6px;">
-                <button style="padding:5px 12px; border-radius:8px; border:1.5px solid var(--accent); background:var(--accent-light); color:var(--accent); font-size:12px; font-weight:600; cursor:pointer;">Week</button>
-                <button style="padding:5px 12px; border-radius:8px; border:1.5px solid #E5E7EB; background:#fff; color:#6B7280; font-size:12px; cursor:pointer;">Month</button>
-            </div>
+            @can('delivery_tracking_access')
+                <a href="{{ route('admin.delivery-trackings.index') }}" class="quick-link">View all</a>
+            @endcan
         </div>
-        <canvas id="lineChart" height="90"></canvas>
+        <div class="page-card-table dashboard-table-wrap">
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Tracking Number</th>
+                        <th>Order</th>
+                        <th>Delivery Boy</th>
+                        <th>Status</th>
+                        <th>COD</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($recent_delivery_trackings as $tracking)
+                        <tr>
+                            <td>{{ $tracking->tracking_number }}</td>
+                            <td>{{ optional($tracking->order)->order_number ?? 'No order' }}</td>
+                            <td>{{ optional($tracking->deliveryBoy)->name ?? 'Unassigned' }}</td>
+                            <td><span class="status-pill {{ $statusClass($tracking->status) }}"><span class="status-dot"></span>{{ $statusLabel($tracking->status) }}</span></td>
+                            <td>{{ $tracking->cod_amount > 0 ? ($tracking->cod_collected ? 'Collected' : $money($tracking->cod_amount)) : '-' }}</td>
+                            <td>
+                                @can('delivery_tracking_show')
+                                    <a href="{{ route('admin.delivery-trackings.show', $tracking) }}" class="btn-outline">Open</a>
+                                @endcan
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="6">No recent deliveries found.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    {{-- Doughnut Chart --}}
-    <div class="chart-card">
-        <div style="margin-bottom:16px;">
-            <p style="font-size:15px; font-weight:700; color:#111827; margin:0;">User Roles</p>
-            <p style="font-size:12px; color:#9CA3AF; margin:3px 0 0;">Distribution by role</p>
+    <div class="page-card">
+        <div class="page-card-header">
+            <div>
+                <h2 class="page-card-title">Recent Returns</h2>
+                <p class="page-card-note">Return request queue</p>
+            </div>
+            @can('return_request_access')
+                <a href="{{ route('admin.return-requests.index') }}" class="quick-link">View all</a>
+            @endcan
         </div>
-        <canvas id="doughnutChart" height="160"></canvas>
-        <div style="margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:6px;" id="doughnut-legend"></div>
+        <div class="page-card-table dashboard-table-wrap">
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Return Number</th>
+                        <th>Order</th>
+                        <th>Product</th>
+                        <th>Refund</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($recent_return_requests as $returnRequest)
+                        <tr>
+                            <td>{{ $returnRequest->return_number }}</td>
+                            <td>{{ optional($returnRequest->order)->order_number ?? 'No order' }}</td>
+                            <td>
+                                <p class="table-main-text">{{ $returnRequest->product_name ?: optional($returnRequest->orderItem)->product_name ?: 'Product' }}</p>
+                                <p class="table-sub-text">{{ trim(($returnRequest->size ?: '') . ' ' . ($returnRequest->color ?: '')) ?: '-' }}</p>
+                            </td>
+                            <td>{{ $money($returnRequest->refund_amount) }}</td>
+                            <td><span class="status-pill {{ $statusClass($returnRequest->status) }}"><span class="status-dot"></span>{{ $statusLabel($returnRequest->status) }}</span></td>
+                            <td>
+                                @can('return_request_show')
+                                    <a href="{{ route('admin.return-requests.show', $returnRequest) }}" class="btn-outline">Open</a>
+                                @endcan
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="6">No recent returns found.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
-
 </div>
 
-{{-- ═══════════════════════════════════════════
-     TABLE + ACTIVITY
-════════════════════════════════════════════ --}}
-<div style="display:grid; grid-template-columns:1.6fr 1fr; gap:16px; margin-bottom:24px;">
-
-    {{-- Recent Users Table --}}
-    <div class="chart-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-            <p style="font-size:15px; font-weight:700; color:#111827; margin:0;">Recent Users</p>
-            <a href="{{ route('admin.users.index') }}" style="font-size:12px; color:var(--accent); font-weight:600; text-decoration:none;">View All →</a>
+<div class="page-card dashboard-section">
+    <div class="page-card-header">
+        <div>
+            <h2 class="page-card-title">Low Stock Items</h2>
+            <p class="page-card-note">Products and variants needing stock attention</p>
         </div>
-        <table class="dash-table">
+        @can('product_access')
+            <a href="{{ route('admin.products.index') }}" class="quick-link">Products</a>
+        @endcan
+    </div>
+    <div class="page-card-table dashboard-table-wrap">
+        <table class="dashboard-table">
             <thead>
                 <tr>
-                    <th>User</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Joined</th>
+                    <th>Product</th>
+                    <th>Variant</th>
+                    <th>Stock</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <div class="avatar">A</div>
-                            <div>
-                                <p style="margin:0; font-weight:600; font-size:13px;">Alice Johnson</p>
-                                <p style="margin:0; font-size:11px; color:#9CA3AF;">alice@example.com</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span class="pill pill-blue">Admin</span></td>
-                    <td><span class="pill pill-green">Active</span></td>
-                    <td style="color:#9CA3AF; font-size:12px;">2 days ago</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <div class="avatar" style="background:#0EA5E9;">R</div>
-                            <div>
-                                <p style="margin:0; font-weight:600; font-size:13px;">Rahul Sharma</p>
-                                <p style="margin:0; font-size:11px; color:#9CA3AF;">rahul@example.com</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span class="pill pill-yellow">Editor</span></td>
-                    <td><span class="pill pill-green">Active</span></td>
-                    <td style="color:#9CA3AF; font-size:12px;">5 days ago</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <div class="avatar" style="background:#10B981;">P</div>
-                            <div>
-                                <p style="margin:0; font-weight:600; font-size:13px;">Priya Singh</p>
-                                <p style="margin:0; font-size:11px; color:#9CA3AF;">priya@example.com</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span class="pill" style="background:#F3F4F6; color:#374151;">Viewer</span></td>
-                    <td><span class="pill pill-yellow">Pending</span></td>
-                    <td style="color:#9CA3AF; font-size:12px;">1 week ago</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <div class="avatar" style="background:#8B5CF6;">M</div>
-                            <div>
-                                <p style="margin:0; font-weight:600; font-size:13px;">Mohammed Ali</p>
-                                <p style="margin:0; font-size:11px; color:#9CA3AF;">mali@example.com</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span class="pill pill-blue">Moderator</span></td>
-                    <td><span class="pill pill-red">Inactive</span></td>
-                    <td style="color:#9CA3AF; font-size:12px;">2 weeks ago</td>
-                </tr>
+                @forelse($low_stock_items as $item)
+                    <tr>
+                        <td>{{ $item['product'] }}</td>
+                        <td><span class="code-pill">{{ $item['variant'] ?: '-' }}</span></td>
+                        <td><span class="status-pill {{ $item['stock'] <= 0 ? 'status-danger' : 'status-warning' }}"><span class="status-dot"></span>{{ $number($item['stock']) }}</span></td>
+                        <td>
+                            @can('product_show')
+                                <a href="{{ $item['url'] }}" class="btn-outline">Open</a>
+                            @endcan
+                        </td>
+                    </tr>
+                @empty
+                    <tr><td colspan="4">No low stock items found.</td></tr>
+                @endforelse
             </tbody>
         </table>
     </div>
-
-    {{-- Recent Activity --}}
-    <div class="chart-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-            <p style="font-size:15px; font-weight:700; color:#111827; margin:0;">Recent Activity</p>
-            <a href="{{ route('admin.audit-logs.index') }}" style="font-size:12px; color:var(--accent); font-weight:600; text-decoration:none;">Audit Log →</a>
-        </div>
-        <div style="display:flex; flex-direction:column; gap:0;">
-
-            @php
-            $activities = [
-                ['icon'=>'fa-user-plus',   'color'=>'#4F46E5', 'bg'=>'#EEF2FF', 'text'=>'New user <strong>Alice</strong> registered', 'time'=>'2 min ago'],
-                ['icon'=>'fa-shield-alt',  'color'=>'#16A34A', 'bg'=>'#DCFCE7', 'text'=>'Role <strong>Editor</strong> updated',         'time'=>'15 min ago'],
-                ['icon'=>'fa-sign-in-alt', 'color'=>'#D97706', 'bg'=>'#FEF3C7', 'text'=>'<strong>Rahul</strong> logged in',             'time'=>'1 hr ago'],
-                ['icon'=>'fa-lock',        'color'=>'#DC2626', 'bg'=>'#FEE2E2', 'text'=>'Failed login attempt detected',               'time'=>'2 hr ago'],
-                ['icon'=>'fa-user-edit',   'color'=>'#0EA5E9', 'bg'=>'#E0F2FE', 'text'=>'Profile updated by <strong>Priya</strong>',   'time'=>'3 hr ago'],
-                ['icon'=>'fa-trash',       'color'=>'#6B7280', 'bg'=>'#F3F4F6', 'text'=>'Permission <strong>post_edit</strong> removed','time'=>'5 hr ago'],
-            ];
-            @endphp
-
-            @foreach($activities as $i => $a)
-            <div style="display:flex; gap:12px; align-items:flex-start; padding:10px 0; {{ $i < count($activities)-1 ? 'border-bottom:1px solid #F3F4F6;' : '' }}">
-                <div style="width:34px; height:34px; border-radius:10px; background:{{ $a['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <i class="fas {{ $a['icon'] }}" style="color:{{ $a['color'] }}; font-size:13px;"></i>
-                </div>
-                <div style="flex:1; min-width:0;">
-                    <p style="font-size:13px; color:#374151; margin:0; line-height:1.4;">{!! $a['text'] !!}</p>
-                    <p style="font-size:11px; color:#9CA3AF; margin:3px 0 0;">{{ $a['time'] }}</p>
-                </div>
-            </div>
-            @endforeach
-
-        </div>
-    </div>
-
 </div>
-
-{{-- ═══════════════════════════════════════════
-     QUICK ACTIONS
-════════════════════════════════════════════ --}}
-<div class="chart-card mb-2">
-    <p style="font-size:15px; font-weight:700; color:#111827; margin:0 0 14px;">Quick Actions</p>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:10px;">
-        @can('user_create')
-        <a href="{{ route('admin.users.create') }}" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; background:var(--accent-light); color:var(--accent); text-decoration:none; font-size:13px; font-weight:600; transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <i class="fas fa-user-plus"></i> Add User
-        </a>
-        @endcan
-        @can('role_create')
-        <a href="{{ route('admin.roles.create') }}" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; background:#F0FDF4; color:#16A34A; text-decoration:none; font-size:13px; font-weight:600; transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <i class="fas fa-plus-circle"></i> New Role
-        </a>
-        @endcan
-        @can('permission_create')
-        <a href="{{ route('admin.permissions.create') }}" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; background:#FFFBEB; color:#D97706; text-decoration:none; font-size:13px; font-weight:600; transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <i class="fas fa-lock"></i> Add Permission
-        </a>
-        @endcan
-        @can('audit_log_access')
-        <a href="{{ route('admin.audit-logs.index') }}" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; background:#FFF1F2; color:#E11D48; text-decoration:none; font-size:13px; font-weight:600; transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <i class="fas fa-history"></i> View Logs
-        </a>
-        @endcan
-        <a href="{{ route('profile.password.edit') }}" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; background:#F3F4F6; color:#374151; text-decoration:none; font-size:13px; font-weight:600; transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <i class="fas fa-key"></i> Change Password
-        </a>
-    </div>
-</div>
-
-@endsection
-
-@section('scripts')
-@parent
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script>
-// ─────────── CHARTS ───────────
-const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#4F46E5';
-
-// Line Chart
-const lineCtx = document.getElementById('lineChart').getContext('2d');
-const lineChart = new Chart(lineCtx, {
-    type: 'line',
-    data: {
-        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
-        datasets: [{
-            label: 'Registrations',
-            data: [18, 35, 22, 48, 31, 57, 42],
-            borderColor: accentColor,
-            backgroundColor: accentColor + '1A',
-            borderWidth: 2.5,
-            fill: true,
-            tension: 0.45,
-            pointBackgroundColor: accentColor,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-            x: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#9CA3AF' } },
-            y: { grid: { color: '#F3F4F6' }, ticks: { font: { size: 12 }, color: '#9CA3AF' } }
-        }
-    }
-});
-
-// Doughnut
-const roleColors = ['#4F46E5','#0EA5E9','#10B981','#F59E0B','#EF4444'];
-const roleLabels = ['Admin','Editor','Moderator','Viewer','Guest'];
-const roleData   = [12, 24, 8, 36, 20];
-const dCtx = document.getElementById('doughnutChart').getContext('2d');
-new Chart(dCtx, {
-    type: 'doughnut',
-    data: {
-        labels: roleLabels,
-        datasets: [{ data: roleData, backgroundColor: roleColors, borderWidth: 0, hoverOffset: 6 }]
-    },
-    options: {
-        responsive: true,
-        cutout: '68%',
-        plugins: {
-            legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } }
-        }
-    }
-});
-
-// Custom Legend
-const legendEl = document.getElementById('doughnut-legend');
-roleLabels.forEach((l, i) => {
-    legendEl.innerHTML += `<div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:10px;height:10px;border-radius:3px;background:${roleColors[i]};display:inline-block;"></span>
-        <span style="font-size:12px;color:#6B7280;">${l}</span>
-        <span style="font-size:12px;font-weight:700;color:#111827;margin-left:auto;">${roleData[i]}%</span>
-    </div>`;
-});
-
-// ─────────── THEME ENGINE ───────────
-function setCSSVar(name, val) {
-    document.documentElement.style.setProperty(name, val);
-}
-
-function setAccent(el) {
-    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
-    el.classList.add('active');
-    const a = el.dataset.accent, l = el.dataset.light, d = el.dataset.dark;
-    setCSSVar('--accent', a);
-    setCSSVar('--accent-light', l);
-    setCSSVar('--accent-dark', d);
-    document.getElementById('custom-color').value = a;
-    document.getElementById('hex-display').textContent = a.toUpperCase();
-    updateChartColors(a);
-    saveTheme();
-}
-
-function applyCustomColor(hex) {
-    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
-    document.getElementById('hex-display').textContent = hex.toUpperCase();
-    const light = hex + '1A', dark = hex;
-    setCSSVar('--accent', hex);
-    setCSSVar('--accent-light', light);
-    setCSSVar('--accent-dark', dark);
-    updateChartColors(hex);
-    saveTheme();
-}
-
-function updateChartColors(color) {
-    if (lineChart) {
-        lineChart.data.datasets[0].borderColor = color;
-        lineChart.data.datasets[0].backgroundColor = color + '1A';
-        lineChart.data.datasets[0].pointBackgroundColor = color;
-        lineChart.update();
-    }
-}
-
-const bgMap = {
-    'bg-gray-100': '#F3F4F6', 'bg-white': '#FFFFFF',
-    'bg-slate-800': '#1E293B', 'bg-blue-50': '#EFF6FF'
-};
-
-function setBg(cls) {
-    const mainEl = document.querySelector('body > .flex.min-h-screen > .flex-1');
-    if (mainEl) {
-        const color = bgMap[cls] || '#F3F4F6';
-        mainEl.style.background = color;
-    }
-    document.querySelectorAll('.theme-bg-btn').forEach(b => {
-        b.style.borderColor = '#E5E7EB';
-    });
-    const btn = document.getElementById('bg-' + cls.replace('bg-','').replace('-100','').replace('-800','dark').replace('-50','blue'));
-    if (btn) btn.style.borderColor = 'var(--accent)';
-    localStorage.setItem('dash_bg', cls);
-}
-
-function setSize(size) {
-    const s = { compact: '13px', default: '14px', spacious: '15px' };
-    document.documentElement.style.fontSize = s[size];
-}
-
-function toggleTheme() {
-    document.getElementById('theme-panel').classList.toggle('open');
-}
-
-function resetTheme() {
-    setCSSVar('--accent', '#4F46E5');
-    setCSSVar('--accent-light', '#EEF2FF');
-    setCSSVar('--accent-dark', '#3730A3');
-    updateChartColors('#4F46E5');
-    document.getElementById('custom-color').value = '#4F46E5';
-    document.getElementById('hex-display').textContent = '#4F46E5';
-    document.querySelectorAll('.color-swatch').forEach((s,i) => { if(i===0) s.classList.add('active'); else s.classList.remove('active'); });
-    localStorage.removeItem('dash_theme');
-    localStorage.removeItem('dash_bg');
-}
-
-function saveTheme() {
-    const t = { accent: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() };
-    localStorage.setItem('dash_theme', JSON.stringify(t));
-}
-
-// ─ Restore saved theme ─
-(function() {
-    const saved = localStorage.getItem('dash_theme');
-    if (saved) {
-        try {
-            const t = JSON.parse(saved);
-            if (t.accent) applyCustomColor(t.accent.trim());
-        } catch(e) {}
-    }
-})();
-
-// Close theme panel on outside click
-document.addEventListener('click', function(e) {
-    const panel = document.getElementById('theme-panel');
-    const btn   = document.getElementById('theme-toggle-btn');
-    if (panel.classList.contains('open') && !panel.contains(e.target) && e.target !== btn) {
-        panel.classList.remove('open');
-    }
-});
-</script>
 @endsection

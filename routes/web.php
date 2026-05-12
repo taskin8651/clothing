@@ -28,6 +28,21 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Audit Logs
     Route::resource('audit-logs', 'AuditLogsController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
 
+      // Products
+    Route::delete('products/destroy', 'ProductsController@massDestroy')->name('products.massDestroy');
+    Route::delete('products/{product}/media/{media}', 'ProductsController@removeMedia')->name('products.removeMedia');
+    Route::resource('products', 'ProductsController');
+
+    // Shops
+Route::delete('shops/destroy', 'ShopsController@massDestroy')->name('shops.massDestroy');
+Route::delete('shops/{shop}/media/{media}', 'ShopsController@removeMedia')->name('shops.removeMedia');
+Route::resource('shops', 'ShopsController');
+
+// Categories
+Route::delete('categories/destroy', 'CategoriesController@massDestroy')->name('categories.massDestroy');
+Route::delete('categories/{category}/media/{media}', 'CategoriesController@removeMedia')->name('categories.removeMedia');
+Route::resource('categories', 'CategoriesController');
+
     
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

@@ -108,6 +108,74 @@
             </div>
         @endcan
 
+
+        {{-- CATALOG MANAGEMENT GROUP --}}
+@php
+    $catalogActive = request()->is('admin/shops*')
+        || request()->is('admin/categories*')
+        || request()->is('admin/products*');
+@endphp
+
+@if(
+    Gate::allows('shop_access') ||
+    Gate::allows('category_access') ||
+    Gate::allows('product_access')
+)
+    <p class="sidebar-section-title nav-label">Catalog</p>
+
+    <div x-data="{ open: {{ $catalogActive ? 'true' : 'false' }} }">
+
+        <button type="button"
+                @click="open = !open"
+                data-tooltip="Catalog"
+                class="nav-link nav-group-btn {{ $catalogActive ? 'active' : '' }}">
+
+            <div class="nav-group-left">
+                <i class="fas fa-store-alt nav-icon"></i>
+                <span class="nav-label">Catalog Management</span>
+            </div>
+
+            <i class="fas fa-chevron-right chevron"
+               :style="open ? 'transform:rotate(90deg)' : ''"></i>
+        </button>
+
+        <div class="submenu"
+             x-show="open"
+             x-transition:enter="transition ease-out duration-150"
+             x-transition:enter-start="opacity-0 -translate-y-1"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-100"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-1">
+
+            @can('shop_access')
+                <a href="{{ route('admin.shops.index') }}"
+                   class="sub-link {{ request()->is('admin/shops*') ? 'active' : '' }}">
+                    <i class="fas fa-store"></i>
+                    Shops
+                </a>
+            @endcan
+
+            @can('category_access')
+                <a href="{{ route('admin.categories.index') }}"
+                   class="sub-link {{ request()->is('admin/categories*') ? 'active' : '' }}">
+                    <i class="fas fa-layer-group"></i>
+                    Categories
+                </a>
+            @endcan
+
+            @can('product_access')
+                <a href="{{ route('admin.products.index') }}"
+                   class="sub-link {{ request()->is('admin/products*') ? 'active' : '' }}">
+                    <i class="fas fa-tshirt"></i>
+                    Products
+                </a>
+            @endcan
+
+        </div>
+    </div>
+@endif
+
         <div class="nav-divider"></div>
 
         <p class="sidebar-section-title compact nav-label">Account</p>

@@ -85,38 +85,7 @@
                     <input type="text" placeholder="Search...">
                     <i class="fas fa-search"></i>
                 </div>
-                @can('notification_access')
-    <a href="{{ route('admin.notifications.index') }}"
-       data-tooltip="Notifications"
-       class="nav-link {{ request()->is('admin/notifications*') ? 'active' : '' }}">
-        <i class="fas fa-bell nav-icon"></i>
-        <span class="nav-label">Notifications</span>
-
-        @php
-            $unreadNotificationsCount = \App\Models\Notification::where('is_read', 0)->count();
-        @endphp
-
-        @if($unreadNotificationsCount > 0)
-            <span class="nav-badge">{{ $unreadNotificationsCount }}</span>
-        @endif
-    </a>
-@endcan
-<style>
-    .nav-badge{
-    margin-left:auto;
-    min-width:22px;
-    height:22px;
-    padding:0 7px;
-    border-radius:999px;
-    background:#EF4444;
-    color:#fff;
-    font-size:11px;
-    font-weight:800;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-</style>
+                @include('partials.notification-modal')
 
                 {{-- Language --}}
                 @if(count(config('panel.available_languages', [])) > 1)

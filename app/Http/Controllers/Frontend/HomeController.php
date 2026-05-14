@@ -13,15 +13,15 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $categories = $this->categories();
-        $products = $this->products();
+        $categories = $this->categoryCollection();
+        $products = $this->productCollection();
         $sections = $this->homepageSections();
         $zones = $this->deliveryZones();
 
         return view('frontend.index', compact('categories', 'products', 'sections', 'zones'));
     }
 
-    private function categories()
+    private function categoryCollection()
     {
         if (! Schema::hasTable('categories')) {
             return collect();
@@ -35,7 +35,7 @@ class HomeController extends Controller
             ->get();
     }
 
-    private function products()
+    private function productCollection()
     {
         if (! Schema::hasTable('products')) {
             return collect();

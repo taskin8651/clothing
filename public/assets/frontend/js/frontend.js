@@ -18,9 +18,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('[data-add-bag]').forEach(function (button) {
         button.addEventListener('click', function () {
-            showToast('Added to trial bag');
+            showToast('Adding to bag');
         });
     });
+
+    const tryToggle = document.querySelector('[data-try-toggle]');
+    const tryMessage = document.querySelector('[data-try-message]');
+
+    function syncTryMessage() {
+        if (!tryToggle || !tryMessage) return;
+
+        if (tryToggle.checked) {
+            tryMessage.textContent = 'Try Cloth selected: is order par return available nahi hoga.';
+            tryMessage.classList.add('locked');
+            return;
+        }
+
+        tryMessage.textContent = 'Normal buy selected: product return eligible rahega.';
+        tryMessage.classList.remove('locked');
+    }
+
+    if (tryToggle) {
+        tryToggle.addEventListener('change', syncTryMessage);
+        syncTryMessage();
+    }
 
     document.querySelectorAll('[data-gender-tab]').forEach(function (button) {
         button.addEventListener('click', function () {

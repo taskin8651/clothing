@@ -1,6 +1,21 @@
 <?php
 
 Route::get('/', [\App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('frontend.home');
+Route::get('/shops', [\App\Http\Controllers\Frontend\ShopsController::class, 'index'])->name('frontend.shops.index');
+Route::get('/shops/{shop}', [\App\Http\Controllers\Frontend\ShopsController::class, 'show'])->name('frontend.shops.show');
+Route::get('/categories', [\App\Http\Controllers\Frontend\CategoriesController::class, 'index'])->name('frontend.categories.index');
+Route::get('/categories/{category:slug}', [\App\Http\Controllers\Frontend\CategoriesController::class, 'show'])->name('frontend.categories.show');
+Route::get('/cart', [\App\Http\Controllers\Frontend\CartController::class, 'index'])->name('frontend.cart.index');
+Route::post('/cart/{product}/add', [\App\Http\Controllers\Frontend\CartController::class, 'add'])->name('frontend.cart.add');
+Route::patch('/cart/{product}', [\App\Http\Controllers\Frontend\CartController::class, 'update'])->name('frontend.cart.update');
+Route::delete('/cart/{product}', [\App\Http\Controllers\Frontend\CartController::class, 'remove'])->name('frontend.cart.remove');
+Route::get('/checkout', [\App\Http\Controllers\Frontend\CheckoutController::class, 'index'])->name('frontend.checkout.index');
+Route::post('/checkout', [\App\Http\Controllers\Frontend\CheckoutController::class, 'store'])->name('frontend.checkout.store');
+Route::get('/orders', [\App\Http\Controllers\Frontend\CustomerOrdersController::class, 'index'])->name('frontend.orders.index');
+Route::get('/orders/{order}', [\App\Http\Controllers\Frontend\CustomerOrdersController::class, 'show'])->name('frontend.orders.show');
+Route::post('/orders/{order}/items/{orderItem}/return', [\App\Http\Controllers\Frontend\CustomerOrdersController::class, 'storeReturn'])->name('frontend.orders.returns.store');
+Route::get('/orders/{order}/success', [\App\Http\Controllers\Frontend\CheckoutController::class, 'success'])->name('frontend.orders.success');
+Route::get('/products/{product:slug}', [\App\Http\Controllers\Frontend\ProductsController::class, 'show'])->name('frontend.products.show');
 Route::get('/home', function () {
     if (session('status')) {
         return redirect()->route('admin.home')->with('status', session('status'));

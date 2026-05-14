@@ -69,7 +69,7 @@ class Product extends Model implements HasMedia
         if ($file) {
             return [
                 'id' => $file->id,
-                'url' => $file->getUrl(),
+                'url' => parse_url($file->getUrl(), PHP_URL_PATH) ?: $file->getUrl(),
                 'name' => $file->file_name,
             ];
         }
@@ -82,7 +82,7 @@ class Product extends Model implements HasMedia
         return $this->getMedia('gallery_images')->map(function ($file) {
             return [
                 'id' => $file->id,
-                'url' => $file->getUrl(),
+                'url' => parse_url($file->getUrl(), PHP_URL_PATH) ?: $file->getUrl(),
                 'name' => $file->file_name,
             ];
         });

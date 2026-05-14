@@ -51,7 +51,10 @@
                 @endforeach
             </div>
             @if($order->deliveryTracking)
-                <p>Tracking: {{ $order->deliveryTracking->tracking_number }} | {{ \App\Models\DeliveryTracking::STATUSES[$order->deliveryTracking->status] ?? $order->deliveryTracking->status }}</p>
+                <p>
+                    Tracking: {{ $order->deliveryTracking->tracking_number }} | {{ \App\Models\DeliveryTracking::STATUSES[$order->deliveryTracking->status] ?? $order->deliveryTracking->status }}
+                    <a href="{{ route('frontend.tracking.show', $order->deliveryTracking) }}">View live</a>
+                </p>
             @endif
         </section>
 

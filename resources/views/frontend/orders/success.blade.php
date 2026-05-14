@@ -54,6 +54,9 @@
             <div><span>Delivery</span><strong>Rs. {{ number_format((float) $order->delivery_charge, 0) }}</strong></div>
             <div class="summary-total"><span>Total</span><strong>Rs. {{ number_format((float) $order->total_amount, 0) }}</strong></div>
             <a href="{{ route('frontend.orders.show', $order) }}" class="front-btn primary">View Order</a>
+            @if($order->deliveryTracking)
+                <a href="{{ route('frontend.tracking.show', $order->deliveryTracking) }}" class="front-btn ghost">Track Delivery</a>
+            @endif
             <a href="{{ route('frontend.home') }}" class="front-btn ghost">Continue Shopping</a>
         </section>
     </main>

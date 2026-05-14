@@ -14,13 +14,21 @@ class CustomerOrdersController extends Controller
     {
         $orders = collect();
 
-        if ($request->filled('mobile') || $request->filled('order_number')) {
+        if (auth()->check()) {
+            $orders = Order::with(['items', 'latestPayment'])
+                ->where('customer_id', auth()->id())
+                ->latest()
+                ->limit(20)
+                ->get();
+        } elseif ($request->filled('mobile') || $request->filled('order_number')) {
             $orders = Order::with(['items', 'latestPayment'])
                 ->when($request->filled('mobile'), fn ($query) => $query->where('customer_mobile', $request->mobile))
                 ->when($request->filled('order_number'), fn ($query) => $query->where('order_number', $request->order_number))
                 ->latest()
                 ->limit(20)
                 ->get();
+
+            session(['verified_order_ids' => $orders->pluck('id')->all()]);
         }
 
         return view('frontend.orders.index', compact('orders'));
@@ -28,6 +36,8 @@ class CustomerOrdersController extends Controller
 
     public function show(Order $order)
     {
+        $this->authorizeOrderAccess($order);
+
         $order->load([
             'items.product.media',
             'payments',
@@ -41,6 +51,7 @@ class CustomerOrdersController extends Controller
 
     public function storeReturn(Request $request, Order $order, OrderItem $orderItem)
     {
+        $this->authorizeOrderAccess($order);
         abort_if((int) $orderItem->order_id !== (int) $order->id, 404);
 
         $request->validate([
@@ -87,5 +98,18 @@ class CustomerOrdersController extends Controller
     private function isReturnEligible(OrderItem $orderItem): bool
     {
         return (bool) $orderItem->return_eligible && ! (bool) $orderItem->try_cloth_selected;
+    }
+
+    private function authorizeOrderAccess(Order $order): void
+    {
+        if (auth()->check()) {
+            abort_if((int) $order->customer_id !== (int) auth()->id(), 403);
+            return;
+        }
+
+        $allowedIds = session('verified_order_ids', []);
+        $lastOrderId = session('last_order_id');
+
+        abort_if(! in_array($order->id, $allowedIds, true) && (int) $lastOrderId !== (int) $order->id, 403);
     }
 }

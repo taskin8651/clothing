@@ -8,6 +8,7 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Requests\UpdateOrderStatusRequest;
 use App\Models\DeliveryBoy;
+use App\Models\DeliveryTracking;
 use App\Models\DeliveryZone;
 use App\Models\Order;
 use App\Models\Product;
@@ -226,6 +227,24 @@ class OrdersController extends Controller
             'order_status' => $status,
             'assigned_at' => now(),
         ]);
+
+        DeliveryTracking::updateOrCreate(
+            ['order_id' => $order->id],
+            [
+                'shop_id' => $order->shop_id,
+                'delivery_boy_id' => $request->delivery_boy_id,
+                'customer_id' => $order->customer_id,
+                'customer_address_id' => $order->customer_address_id,
+                'pickup_address' => optional($order->shop)->address,
+                'delivery_address' => $order->delivery_address,
+                'city' => $order->city,
+                'area' => $order->area,
+                'pincode' => $order->pincode,
+                'status' => 'assigned',
+                'cod_amount' => $order->payment_method === 'cod' ? $order->total_amount : 0,
+                'assigned_at' => now(),
+            ]
+        );
 
         $this->createStatusHistory($order, $status, $request->note ?: 'Delivery boy assigned');
 

@@ -35,28 +35,40 @@
 
             <section class="front-form-card">
                 <h2>Delivery Details</h2>
+                @if(auth()->check() && $addresses->count())
+                    <label>Saved address
+                        <select name="customer_address_id" data-address-select>
+                            <option value="">Use new address</option>
+                            @foreach($addresses as $address)
+                                <option value="{{ $address->id }}" {{ old('customer_address_id', optional($defaultAddress)->id) == $address->id ? 'selected' : '' }}>
+                                    {{ $address->name }} - {{ $address->area }}, {{ $address->pincode }} {{ $address->is_default ? '(Default)' : '' }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </label>
+                @endif
                 <label>Name
-                    <input type="text" name="customer_name" value="{{ old('customer_name') }}" required>
+                    <input type="text" name="customer_name" value="{{ old('customer_name', auth()->user()->name ?? optional($defaultAddress)->name) }}" required>
                     @error('customer_name') <small>{{ $message }}</small> @enderror
                 </label>
                 <label>Mobile
-                    <input type="tel" name="customer_mobile" value="{{ old('customer_mobile') }}" required>
+                    <input type="tel" name="customer_mobile" value="{{ old('customer_mobile', auth()->user()->mobile ?? optional($defaultAddress)->mobile) }}" required>
                     @error('customer_mobile') <small>{{ $message }}</small> @enderror
                 </label>
                 <label>Address
-                    <textarea name="delivery_address" rows="3" required>{{ old('delivery_address') }}</textarea>
+                    <textarea name="delivery_address" rows="3" required>{{ old('delivery_address', optional($defaultAddress)->address) }}</textarea>
                     @error('delivery_address') <small>{{ $message }}</small> @enderror
                 </label>
                 <div class="form-grid-2">
                     <label>City
-                        <input type="text" name="city" value="{{ old('city', 'Mumbai') }}" required>
+                        <input type="text" name="city" value="{{ old('city', optional($defaultAddress)->city ?: 'Mumbai') }}" required>
                     </label>
                     <label>Pincode
-                        <input type="text" name="pincode" value="{{ old('pincode', '400001') }}" required>
+                        <input type="text" name="pincode" value="{{ old('pincode', optional($defaultAddress)->pincode ?: '400001') }}" required>
                     </label>
                 </div>
                 <label>Area
-                    <input type="text" name="area" value="{{ old('area', 'Fort') }}">
+                    <input type="text" name="area" value="{{ old('area', optional($defaultAddress)->area ?: 'Fort') }}">
                 </label>
                 <label>Notes
                     <textarea name="notes" rows="2">{{ old('notes') }}</textarea>

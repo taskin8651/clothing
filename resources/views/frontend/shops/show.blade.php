@@ -26,6 +26,22 @@
     </section>
 
     <section class="frontend-product-section">
+        <form action="{{ route('frontend.shops.show', $shop) }}" method="GET" class="inline-filter-bar">
+            <select name="category_id">
+                <option value="">All</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ (string) request('category_id') === (string) $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                @endforeach
+            </select>
+            <select name="sort">
+                <option value="">Featured</option>
+                <option value="latest" {{ request('sort') === 'latest' ? 'selected' : '' }}>Latest</option>
+                <option value="price_low" {{ request('sort') === 'price_low' ? 'selected' : '' }}>Low-high</option>
+                <option value="price_high" {{ request('sort') === 'price_high' ? 'selected' : '' }}>High-low</option>
+            </select>
+            <label><input type="checkbox" name="try_cloth" value="1" {{ request('try_cloth') ? 'checked' : '' }}> Try</label>
+            <button type="submit">Filter</button>
+        </form>
         <h2>{{ $shop->products->count() }} products</h2>
         <div class="frontend-product-grid">
             @forelse($shop->products as $product)

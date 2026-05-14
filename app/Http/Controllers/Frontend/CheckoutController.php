@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryZone;
+use App\Models\DeliveryTracking;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -24,6 +26,8 @@ class CheckoutController extends Controller
             'subtotal' => $subtotal,
             'deliveryCharge' => 49,
             'total' => $subtotal + 49,
+            'addresses' => auth()->check() ? auth()->user()->addresses()->where('status', 1)->latest()->get() : collect(),
+            'defaultAddress' => auth()->check() ? auth()->user()->defaultAddress : null,
         ]);
     }
 
@@ -38,6 +42,7 @@ class CheckoutController extends Controller
         $data = $request->validate([
             'customer_name' => ['required', 'string', 'max:120'],
             'customer_mobile' => ['required', 'string', 'max:20'],
+            'customer_address_id' => ['nullable', 'exists:user_addresses,id'],
             'delivery_address' => ['required', 'string', 'max:500'],
             'city' => ['required', 'string', 'max:80'],
             'area' => ['nullable', 'string', 'max:120'],
@@ -49,6 +54,18 @@ class CheckoutController extends Controller
 
         $tryClothSelected = $request->boolean('try_cloth_selected');
         $returnEligible = ! $tryClothSelected;
+        $selectedAddress = null;
+
+        if (auth()->check() && ! empty($data['customer_address_id'])) {
+            $selectedAddress = UserAddress::where('user_id', auth()->id())->findOrFail($data['customer_address_id']);
+            $data['customer_name'] = $selectedAddress->name ?: auth()->user()->name;
+            $data['customer_mobile'] = $selectedAddress->mobile ?: auth()->user()->mobile;
+            $data['delivery_address'] = $selectedAddress->address;
+            $data['city'] = $selectedAddress->city;
+            $data['area'] = $selectedAddress->area;
+            $data['pincode'] = $selectedAddress->pincode;
+        }
+
         $zone = DeliveryZone::where('status', 1)
             ->where('pincode', $data['pincode'])
             ->orderBy('sort_order')
@@ -61,9 +78,11 @@ class CheckoutController extends Controller
             $deliveryCharge = 0;
         }
 
-        $order = DB::transaction(function () use ($data, $products, $subtotal, $deliveryCharge, $shopId, $tryClothSelected, $returnEligible) {
+        $order = DB::transaction(function () use ($data, $products, $subtotal, $deliveryCharge, $shopId, $tryClothSelected, $returnEligible, $selectedAddress) {
             $order = Order::create([
                 'shop_id' => $shopId,
+                'customer_id' => auth()->id(),
+                'customer_address_id' => optional($selectedAddress)->id,
                 'subtotal' => $subtotal,
                 'discount_amount' => 0,
                 'delivery_charge' => $deliveryCharge,
@@ -108,17 +127,33 @@ class CheckoutController extends Controller
                 'status' => 'pending',
             ]);
 
+            DeliveryTracking::create([
+                'order_id' => $order->id,
+                'shop_id' => $shopId,
+                'customer_id' => $order->customer_id,
+                'customer_address_id' => $order->customer_address_id,
+                'pickup_address' => optional($products->first()->shop)->address,
+                'delivery_address' => $order->delivery_address,
+                'city' => $order->city,
+                'area' => $order->area,
+                'pincode' => $order->pincode,
+                'status' => 'pending',
+                'cod_amount' => $data['payment_method'] === 'cod' ? $order->total_amount : 0,
+                'cod_collected' => 0,
+            ]);
+
             return $order;
         });
 
         session()->forget('frontend_cart');
+        session(['last_order_id' => $order->id]);
 
         return redirect()->route('frontend.orders.success', $order);
     }
 
     public function success(Order $order)
     {
-        $order->load(['items.product.media', 'payments']);
+        $order->load(['items.product.media', 'payments', 'deliveryTracking']);
 
         return view('frontend.orders.success', compact('order'));
     }

@@ -1,6 +1,7 @@
 @php
     $fallbackImage = $fallbackImage ?? asset('assets/frontend/images/zilo-jpg/cat-dresses.jpg');
     $price = $product->discount_price ?: $product->price;
+    $isWishlisted = auth()->check() && in_array($product->id, $wishlistIds ?? [], true);
 @endphp
 
 <article class="front-product-card">
@@ -10,6 +11,12 @@
             <span>Try First</span>
         @endif
     </a>
+    <form action="{{ route('frontend.wishlist.toggle', $product) }}" method="POST" class="wishlist-toggle-form">
+        @csrf
+        <button type="submit" title="Wishlist" class="{{ $isWishlisted ? 'active' : '' }}">
+            <i class="{{ $isWishlisted ? 'fas' : 'far' }} fa-heart"></i>
+        </button>
+    </form>
     <div class="front-product-body">
         <p>{{ $product->brand ?: optional($product->category)->name ?: 'StyleOne' }}</p>
         <a href="{{ route('frontend.products.show', $product) }}">{{ $product->name }}</a>

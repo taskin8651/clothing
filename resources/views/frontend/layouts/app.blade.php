@@ -18,8 +18,8 @@
     <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
         <a href="{{ route('frontend.home') }}" class="{{ request()->routeIs('frontend.home') ? 'active' : '' }} logo-link"><strong>ZILO</strong><span>Home</span></a>
         <a href="{{ route('frontend.shops.index') }}" class="{{ request()->routeIs('frontend.shops.*') || request()->routeIs('frontend.categories.*') ? 'active' : '' }}"><i class="fas fa-border-all"></i><span>Shop</span></a>
-        <a href="{{ route('frontend.categories.index') }}"><i class="fas fa-magnifying-glass"></i><span>Search</span></a>
-        <a href="{{ route('frontend.orders.index') }}" class="{{ request()->routeIs('frontend.orders.*') ? 'active' : '' }}"><i class="fas fa-user"></i><span>Orders</span></a>
+        <a href="{{ route('frontend.search.index') }}" class="{{ request()->routeIs('frontend.search.*') ? 'active' : '' }}"><i class="fas fa-magnifying-glass"></i><span>Search</span></a>
+        <a href="{{ auth()->check() ? route('frontend.customer.profile') : route('frontend.customer.login') }}" class="{{ request()->routeIs('frontend.customer.*') || request()->routeIs('frontend.orders.*') ? 'active' : '' }}"><i class="fas fa-user"></i><span>Profile</span></a>
         <a href="{{ route('frontend.cart.index') }}" class="{{ request()->routeIs('frontend.cart.*') || request()->routeIs('frontend.checkout.*') ? 'active' : '' }}"><i class="fas fa-bag-shopping"></i><span>Bag</span></a>
     </nav>
 

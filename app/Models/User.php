@@ -106,6 +106,16 @@ class User extends Authenticatable
         return $this->hasMany(ReturnRequest::class, 'customer_id');
     }
 
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class, 'user_id');
+    }
+
+    public function wishlistProducts()
+    {
+        return $this->belongsToMany(Product::class, 'wishlists', 'user_id', 'product_id')->withTimestamps();
+    }
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);

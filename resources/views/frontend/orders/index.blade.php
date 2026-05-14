@@ -10,21 +10,24 @@
         <section class="flow-heading">
             <span>My Orders</span>
             <h1>Track your orders</h1>
-            <p>Mobile number ya exact order number se order status, return eligibility aur return requests check karein.</p>
+            <p>{{ auth()->check() ? 'Aapke account ke orders yahan show honge.' : 'Mobile number ya exact order number se order status, return eligibility aur return requests check karein.' }}</p>
         </section>
 
-        <form action="{{ route('frontend.orders.index') }}" method="GET" class="front-form-card order-lookup-form">
-            <h2>Find Order</h2>
-            <label>Mobile number
-                <input type="tel" name="mobile" value="{{ request('mobile') }}" placeholder="9876543210">
-            </label>
-            <label>Order number
-                <input type="text" name="order_number" value="{{ request('order_number') }}" placeholder="ORD-2026-00001">
-            </label>
-            <button type="submit" class="front-btn primary">Search Orders</button>
-        </form>
+        @guest
+            <form action="{{ route('frontend.orders.index') }}" method="GET" class="front-form-card order-lookup-form">
+                <h2>Find Order</h2>
+                <label>Mobile number
+                    <input type="tel" name="mobile" value="{{ request('mobile') }}" placeholder="9876543210">
+                </label>
+                <label>Order number
+                    <input type="text" name="order_number" value="{{ request('order_number') }}" placeholder="ORD-2026-00001">
+                </label>
+                <button type="submit" class="front-btn primary">Search Orders</button>
+                <a href="{{ route('frontend.customer.login') }}" class="front-btn ghost">Login for My Orders</a>
+            </form>
+        @endguest
 
-        @if(request()->hasAny(['mobile', 'order_number']))
+        @if(auth()->check() || request()->hasAny(['mobile', 'order_number']))
             <section class="order-card-list">
                 @forelse($orders as $order)
                     <a href="{{ route('frontend.orders.show', $order) }}" class="customer-order-card">

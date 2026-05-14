@@ -12,6 +12,7 @@ class ProductsController extends Controller
         abort_if(! $product->status, 404);
 
         $product->load(['shop', 'category', 'variants', 'media']);
+        $this->rememberRecentlyViewed($product);
 
         $relatedProducts = Product::with(['category', 'media'])
             ->where('status', 1)
@@ -22,5 +23,13 @@ class ProductsController extends Controller
             ->get();
 
         return view('frontend.products.show', compact('product', 'relatedProducts'));
+    }
+
+    private function rememberRecentlyViewed(Product $product): void
+    {
+        $ids = session('recently_viewed_products', []);
+        $ids = array_values(array_unique(array_merge([$product->id], array_diff($ids, [$product->id]))));
+
+        session(['recently_viewed_products' => array_slice($ids, 0, 10)]);
     }
 }

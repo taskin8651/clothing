@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\DeliveryBoy;
 use App\Models\DeliveryZone;
 use App\Models\HomepageSection;
 use App\Models\Product;
@@ -36,6 +37,7 @@ class FrontendDemoSeeder extends Seeder
         $categories = $this->seedCategories();
         $this->seedProducts($shop, $categories);
         $this->seedDeliveryZones($shop);
+        $this->seedDeliveryBoy();
         $this->seedHomepageSections($categories);
     }
 
@@ -143,6 +145,26 @@ class FrontendDemoSeeder extends Seeder
                 ]
             );
         }
+    }
+
+    private function seedDeliveryBoy(): void
+    {
+        DeliveryBoy::updateOrCreate(
+            ['mobile' => '8888880001'],
+            [
+                'name' => 'Demo Rider',
+                'email' => 'rider@styleone.test',
+                'password' => 'password',
+                'address' => 'Bandra West, Mumbai',
+                'city' => 'Mumbai',
+                'area' => 'Bandra',
+                'pincode' => '400050',
+                'vehicle_type' => 'Bike',
+                'vehicle_number' => 'MH01AB1234',
+                'id_proof_type' => 'Aadhaar',
+                'status' => 1,
+            ]
+        );
     }
 
     private function seedHomepageSections(array $categories): void

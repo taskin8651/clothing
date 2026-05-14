@@ -28,6 +28,14 @@ Route::get('/profile', [\App\Http\Controllers\Frontend\CustomerProfileController
 Route::post('/profile/addresses', [\App\Http\Controllers\Frontend\CustomerProfileController::class, 'storeAddress'])->middleware('auth')->name('frontend.customer.addresses.store');
 Route::post('/profile/addresses/{address}/default', [\App\Http\Controllers\Frontend\CustomerProfileController::class, 'setDefaultAddress'])->middleware('auth')->name('frontend.customer.addresses.default');
 Route::delete('/profile/addresses/{address}', [\App\Http\Controllers\Frontend\CustomerProfileController::class, 'deleteAddress'])->middleware('auth')->name('frontend.customer.addresses.delete');
+Route::get('/notifications', [\App\Http\Controllers\Frontend\NotificationsController::class, 'index'])->middleware('auth')->name('frontend.notifications.index');
+Route::get('/notifications/{notification}', [\App\Http\Controllers\Frontend\NotificationsController::class, 'show'])->middleware('auth')->name('frontend.notifications.show');
+Route::post('/notifications/{notification}/read', [\App\Http\Controllers\Frontend\NotificationsController::class, 'markRead'])->middleware('auth')->name('frontend.notifications.read');
+Route::post('/notifications/read-all', [\App\Http\Controllers\Frontend\NotificationsController::class, 'markAllRead'])->middleware('auth')->name('frontend.notifications.readAll');
+Route::get('/invoices/{invoice}', [\App\Http\Controllers\Frontend\DocumentsController::class, 'invoice'])->name('frontend.invoices.show');
+Route::get('/receipts/{receipt}', [\App\Http\Controllers\Frontend\DocumentsController::class, 'receipt'])->name('frontend.receipts.show');
+Route::get('/orders/{order}/payment', [\App\Http\Controllers\Frontend\DocumentsController::class, 'payment'])->name('frontend.orders.payment');
+Route::post('/orders/{order}/payment/success', [\App\Http\Controllers\Frontend\DocumentsController::class, 'markPaymentSuccess'])->name('frontend.orders.payment.success');
 Route::get('/orders', [\App\Http\Controllers\Frontend\CustomerOrdersController::class, 'index'])->name('frontend.orders.index');
 Route::get('/orders/{order}', [\App\Http\Controllers\Frontend\CustomerOrdersController::class, 'show'])->name('frontend.orders.show');
 Route::post('/orders/{order}/items/{orderItem}/return', [\App\Http\Controllers\Frontend\CustomerOrdersController::class, 'storeReturn'])->name('frontend.orders.returns.store');

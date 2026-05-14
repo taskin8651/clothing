@@ -44,6 +44,8 @@ class CustomerOrdersController extends Controller
             'statusHistories',
             'deliveryTracking',
             'returnRequests.orderItem',
+            'latestInvoice',
+            'latestPayment.receipts',
         ]);
 
         return view('frontend.orders.show', compact('order'));

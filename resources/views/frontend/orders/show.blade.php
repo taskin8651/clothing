@@ -111,6 +111,14 @@
             <div><span>Subtotal</span><strong>Rs. {{ number_format((float) $order->subtotal, 0) }}</strong></div>
             <div><span>Delivery</span><strong>Rs. {{ number_format((float) $order->delivery_charge, 0) }}</strong></div>
             <div class="summary-total"><span>Total</span><strong>Rs. {{ number_format((float) $order->total_amount, 0) }}</strong></div>
+            @if($order->latestInvoice)
+                <a href="{{ route('frontend.invoices.show', $order->latestInvoice) }}" class="front-btn ghost">View Invoice</a>
+            @endif
+            @if($order->latestPayment && $order->latestPayment->receipts->first())
+                <a href="{{ route('frontend.receipts.show', $order->latestPayment->receipts->first()) }}" class="front-btn ghost">View Receipt</a>
+            @elseif($order->payment_method === 'online' && $order->payment_status !== 'paid')
+                <a href="{{ route('frontend.orders.payment', $order) }}" class="front-btn primary">Pay Online</a>
+            @endif
         </section>
     </main>
 </div>

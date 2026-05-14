@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryBoy;
 use App\Models\DeliveryTracking;
+use App\Services\FinanceDocumentService;
 use Illuminate\Http\Request;
 
 class DeliveryBoyPanelController extends Controller
@@ -54,7 +55,7 @@ class DeliveryBoyPanelController extends Controller
         return back()->with('message', 'Delivery status update ho gaya.');
     }
 
-    public function markCodCollected(Request $request, DeliveryTracking $deliveryTracking)
+    public function markCodCollected(Request $request, DeliveryTracking $deliveryTracking, FinanceDocumentService $documents)
     {
         $data = $request->validate([
             'delivery_boy_id' => ['required', 'exists:delivery_boys,id'],
@@ -80,6 +81,7 @@ class DeliveryBoyPanelController extends Controller
                     'status' => 'paid',
                     'paid_at' => now(),
                 ]);
+                $documents->generateReceiptFromPayment($payment->fresh('order'));
             }
         }
 

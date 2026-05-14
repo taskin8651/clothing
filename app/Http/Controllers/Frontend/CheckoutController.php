@@ -8,6 +8,8 @@ use App\Models\DeliveryTracking;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\UserAddress;
+use App\Services\FinanceDocumentService;
+use App\Services\CustomerNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -31,7 +33,7 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, FinanceDocumentService $documents, CustomerNotificationService $notifications)
     {
         [$products, $subtotal] = $this->cartProducts();
 
@@ -147,13 +149,18 @@ class CheckoutController extends Controller
 
         session()->forget('frontend_cart');
         session(['last_order_id' => $order->id]);
+        $order = $order->fresh(['items', 'payments', 'latestPayment', 'customer']);
+        $documents->generateInvoiceFromOrder($order);
+        $order->load('latestInvoice');
+        $notifications->orderPlaced($order);
+        $notifications->invoiceGenerated($order);
 
         return redirect()->route('frontend.orders.success', $order);
     }
 
     public function success(Order $order)
     {
-        $order->load(['items.product.media', 'payments', 'deliveryTracking']);
+        $order->load(['items.product.media', 'payments.receipts', 'latestInvoice', 'deliveryTracking']);
 
         return view('frontend.orders.success', compact('order'));
     }

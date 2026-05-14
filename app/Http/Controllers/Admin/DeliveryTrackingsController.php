@@ -13,6 +13,7 @@ use App\Models\Order;
 use App\Models\Shop;
 use App\Models\User;
 use App\Models\UserAddress;
+use App\Services\FinanceDocumentService;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -187,7 +188,7 @@ class DeliveryTrackingsController extends Controller
         return back()->with('message', 'Delivery boy assigned successfully.');
     }
 
-    public function markCodCollected(DeliveryTracking $deliveryTracking)
+    public function markCodCollected(DeliveryTracking $deliveryTracking, FinanceDocumentService $documents)
     {
         abort_if(Gate::denies('delivery_tracking_cod_update'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
@@ -208,6 +209,7 @@ class DeliveryTrackingsController extends Controller
                     'status' => 'paid',
                     'paid_at' => now(),
                 ]);
+                $documents->generateReceiptFromPayment($payment->fresh('order'));
             }
         }
 

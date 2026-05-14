@@ -1037,6 +1037,153 @@ body {
     font-weight: 800;
 }
 
+.document-page {
+    background: #fff;
+}
+
+.document-hero,
+.payment-demo-card {
+    background: #111;
+    border-radius: 14px;
+    color: #fff;
+    display: grid;
+    gap: 8px;
+    padding: 18px;
+}
+
+.document-hero.paid {
+    background: #186437;
+}
+
+.document-hero span {
+    color: #ef8df1;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.document-hero h1 {
+    font-size: 28px;
+    line-height: 1;
+    margin: 0;
+}
+
+.document-hero p {
+    color: #ddd;
+    font-size: 14px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.document-hero button {
+    background: #fff;
+    border: 0;
+    border-radius: 8px;
+    color: #111;
+    cursor: pointer;
+    font-weight: 900;
+    justify-self: start;
+    min-height: 38px;
+    padding: 0 14px;
+}
+
+.document-card,
+.payment-demo-card {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.document-card {
+    background: #fff;
+}
+
+.document-card h2,
+.payment-demo-card h2 {
+    font-size: 22px;
+    margin: 0 0 12px;
+}
+
+.document-two-col {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.document-two-col span {
+    color: #df71e5;
+    display: block;
+    font-size: 12px;
+    font-weight: 900;
+    margin-bottom: 7px;
+    text-transform: uppercase;
+}
+
+.document-two-col strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.document-two-col p,
+.payment-demo-card p {
+    color: #666;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.45;
+    margin: 0;
+}
+
+.payment-demo-card p {
+    color: #ddd;
+}
+
+.payment-demo-card i {
+    color: #ef8df1;
+    font-size: 32px;
+}
+
+.document-items {
+    display: grid;
+    gap: 10px;
+}
+
+.document-items div {
+    align-items: center;
+    background: #fafafa;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+}
+
+.document-items span {
+    color: #555;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.document-summary {
+    position: static;
+}
+
+@media print {
+    .zilo-mobile-header,
+    .mobile-bottom-nav,
+    .document-hero button {
+        display: none !important;
+    }
+
+    .zilo-mobile-page {
+        box-shadow: none;
+        max-width: none;
+    }
+
+    .front-flow-page {
+        padding: 0;
+    }
+}
+
 .front-flow-page {
     display: grid;
     gap: 16px;

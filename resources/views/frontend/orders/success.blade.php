@@ -54,6 +54,12 @@
             <div><span>Delivery</span><strong>Rs. {{ number_format((float) $order->delivery_charge, 0) }}</strong></div>
             <div class="summary-total"><span>Total</span><strong>Rs. {{ number_format((float) $order->total_amount, 0) }}</strong></div>
             <a href="{{ route('frontend.orders.show', $order) }}" class="front-btn primary">View Order</a>
+            @if($order->latestInvoice)
+                <a href="{{ route('frontend.invoices.show', $order->latestInvoice) }}" class="front-btn ghost">View Invoice</a>
+            @endif
+            @if($order->payment_method === 'online' && $order->payment_status !== 'paid')
+                <a href="{{ route('frontend.orders.payment', $order) }}" class="front-btn ghost">Pay Online</a>
+            @endif
             @if($order->deliveryTracking)
                 <a href="{{ route('frontend.tracking.show', $order->deliveryTracking) }}" class="front-btn ghost">Track Delivery</a>
             @endif

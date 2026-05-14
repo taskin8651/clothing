@@ -182,6 +182,61 @@
 @endcanany
 
 
+{{-- QUICK COMMERCE GROUP --}}
+@canany(['delivery_zone_access', 'homepage_section_access'])
+    @php
+        $quickCommerceActive = request()->is('admin/delivery-zones*')
+            || request()->is('admin/homepage-sections*');
+    @endphp
+
+    <p class="sidebar-section-title nav-label">Quick Commerce</p>
+
+    <div x-data="{ open: {{ $quickCommerceActive ? 'true' : 'false' }} }">
+
+        <button type="button"
+                @click="open = !open"
+                data-tooltip="Quick Commerce"
+                class="nav-link nav-group-btn {{ $quickCommerceActive ? 'active' : '' }}">
+
+            <div class="nav-group-left">
+                <i class="fas fa-bolt nav-icon"></i>
+                <span class="nav-label">Quick Commerce</span>
+            </div>
+
+            <i class="fas fa-chevron-right chevron"
+               :style="open ? 'transform:rotate(90deg)' : ''"></i>
+        </button>
+
+        <div class="submenu"
+             x-show="open"
+             x-transition:enter="transition ease-out duration-150"
+             x-transition:enter-start="opacity-0 -translate-y-1"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-100"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-1">
+
+            @can('delivery_zone_access')
+                <a href="{{ route('admin.delivery-zones.index') }}"
+                   class="sub-link {{ request()->is('admin/delivery-zones*') ? 'active' : '' }}">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Delivery Zones
+                </a>
+            @endcan
+
+            @can('homepage_section_access')
+                <a href="{{ route('admin.homepage-sections.index') }}"
+                   class="sub-link {{ request()->is('admin/homepage-sections*') ? 'active' : '' }}">
+                    <i class="fas fa-images"></i>
+                    Homepage Sections
+                </a>
+            @endcan
+
+        </div>
+    </div>
+@endcanany
+
+
 {{-- CUSTOMER MANAGEMENT GROUP --}}
 @canany(['customer_access', 'customer_address_access'])
     @php

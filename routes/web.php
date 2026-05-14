@@ -1,6 +1,6 @@
 <?php
 
-Route::redirect('/', '/login');
+Route::get('/', [\App\Http\Controllers\Frontend\HomeController::class, 'index'])->name('frontend.home');
 Route::get('/home', function () {
     if (session('status')) {
         return redirect()->route('admin.home')->with('status', session('status'));
@@ -72,6 +72,14 @@ Route::post('delivery-trackings/{deliveryTracking}/update-status', 'DeliveryTrac
 Route::post('delivery-trackings/{deliveryTracking}/assign-delivery-boy', 'DeliveryTrackingsController@assignDeliveryBoy')->name('delivery-trackings.assignDeliveryBoy');
 Route::post('delivery-trackings/{deliveryTracking}/mark-cod-collected', 'DeliveryTrackingsController@markCodCollected')->name('delivery-trackings.markCodCollected');
 Route::resource('delivery-trackings', 'DeliveryTrackingsController')->parameters(['delivery-trackings' => 'deliveryTracking']);
+
+// Delivery Zones
+Route::delete('delivery-zones/destroy', 'DeliveryZonesController@massDestroy')->name('delivery-zones.massDestroy');
+Route::resource('delivery-zones', 'DeliveryZonesController')->parameters(['delivery-zones' => 'deliveryZone']);
+
+// Homepage Sections
+Route::delete('homepage-sections/destroy', 'HomepageSectionsController@massDestroy')->name('homepage-sections.massDestroy');
+Route::resource('homepage-sections', 'HomepageSectionsController')->parameters(['homepage-sections' => 'homepageSection']);
 
 // Payments
 Route::delete('payments/destroy', 'PaymentsController@massDestroy')->name('payments.massDestroy');

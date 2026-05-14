@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="220" viewBox="0 0 520 220">
+  <rect width="520" height="220" rx="22" fill="#fff3ca"/>
+  <path d="M0 70h520" stroke="#d4ad35" stroke-width="3" stroke-dasharray="12 10"/>
+  <text x="34" y="62" fill="#4f3500" font-family="Arial, sans-serif" font-size="34" font-weight="900">EXTRA 15% OFF</text>
+  <text x="35" y="128" fill="#111" font-family="Arial, sans-serif" font-size="54" font-weight="900">ZILO15</text>
+  <text x="38" y="174" fill="#6d5a23" font-family="Arial, sans-serif" font-size="22" font-weight="700">Use on first trial bag</text>
+</svg>

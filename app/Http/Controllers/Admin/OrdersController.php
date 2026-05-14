@@ -8,6 +8,7 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Requests\UpdateOrderStatusRequest;
 use App\Models\DeliveryBoy;
+use App\Models\DeliveryZone;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
@@ -290,6 +291,16 @@ class OrdersController extends Controller
     {
         if (! $address || ! $address->pincode) {
             return null;
+        }
+
+        $zoneShopId = DeliveryZone::where('status', 1)
+            ->where('pincode', $address->pincode)
+            ->whereNotNull('shop_id')
+            ->orderBy('sort_order')
+            ->value('shop_id');
+
+        if ($zoneShopId) {
+            return $zoneShopId;
         }
 
         return Shop::where('status', 1)->where('pincode', $address->pincode)->value('id');

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="420" viewBox="0 0 1440 420">
+  <rect width="1440" height="420" fill="#fff0f3"/>
+  <circle cx="1130" cy="180" r="150" fill="#e34848" opacity=".14"/>
+  <text x="72" y="126" fill="#151515" font-family="Arial, sans-serif" font-size="68" font-weight="800">Shaadi Closet</text>
+  <text x="76" y="190" fill="#7b3440" font-family="Arial, sans-serif" font-size="30" font-weight="700">Wedding guest looks, jewellery and heels</text>
+  <text x="76" y="260" fill="#e34848" font-family="Arial, sans-serif" font-size="28" font-weight="800">Delivered today</text>
+  <path d="M982 90h160l78 270H902z" fill="#e34848" opacity=".88"/>
+</svg>

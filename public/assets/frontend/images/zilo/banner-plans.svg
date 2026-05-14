@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+  <rect width="720" height="420" fill="#201a25"/>
+  <circle cx="565" cy="128" r="120" fill="#f25555" opacity=".45"/>
+  <text x="42" y="105" fill="#fff" font-family="Arial, sans-serif" font-size="54" font-weight="800">Plans Tonight?</text>
+  <text x="45" y="160" fill="#ffd7d7" font-family="Arial, sans-serif" font-size="25" font-weight="700">Party fits delivered before you leave</text>
+  <rect x="48" y="230" width="168" height="54" rx="27" fill="#fff"/>
+  <text x="78" y="266" fill="#201a25" font-family="Arial, sans-serif" font-size="20" font-weight="800">GET READY</text>
+</svg>

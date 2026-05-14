@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+  <rect width="720" height="420" fill="#e9f8e9"/>
+  <text x="42" y="102" fill="#151515" font-family="Arial, sans-serif" font-size="54" font-weight="800">New Launches</text>
+  <text x="44" y="158" fill="#346b40" font-family="Arial, sans-serif" font-size="25" font-weight="700">Fresh drops from popular stores</text>
+  <rect x="430" y="96" width="90" height="245" rx="14" fill="#f25555"/>
+  <rect x="535" y="125" width="90" height="216" rx="14" fill="#121212"/>
+</svg>

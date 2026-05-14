@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="360" viewBox="0 0 1440 360">
+  <rect width="1440" height="360" fill="#f5f0ff"/>
+  <text x="70" y="138" fill="#151515" font-family="Arial, sans-serif" font-size="62" font-weight="900">Shop Women</text>
+  <text x="74" y="196" fill="#5a4381" font-family="Arial, sans-serif" font-size="30" font-weight="700">Dresses, kurtas, tops, shoes, bags and more</text>
+  <rect x="1020" y="52" width="120" height="250" rx="60" fill="#9d70e5"/>
+  <rect x="1165" y="78" width="120" height="224" rx="60" fill="#e25587"/>
+</svg>

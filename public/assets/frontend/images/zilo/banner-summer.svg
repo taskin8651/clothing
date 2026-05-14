@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+  <rect width="720" height="420" fill="#dff3ff"/>
+  <circle cx="128" cy="112" r="78" fill="#ffd86b"/>
+  <text x="42" y="100" fill="#151515" font-family="Arial, sans-serif" font-size="52" font-weight="800">Cool for Summer</text>
+  <text x="44" y="154" fill="#2d6380" font-family="Arial, sans-serif" font-size="25" font-weight="700">Linen, cotton, soft colors</text>
+  <rect x="430" y="112" width="168" height="230" rx="80" fill="#58bcd9"/>
+  <rect x="472" y="148" width="88" height="194" rx="44" fill="#ffffff" opacity=".65"/>
+</svg>

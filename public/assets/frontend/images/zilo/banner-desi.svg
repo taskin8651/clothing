@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+  <rect width="720" height="420" fill="#fbe7c6"/>
+  <circle cx="570" cy="95" r="115" fill="#e94f64" opacity=".18"/>
+  <text x="42" y="98" fill="#151515" font-family="Arial, sans-serif" font-size="54" font-weight="800">Make it Desi</text>
+  <text x="44" y="153" fill="#6c4d25" font-family="Arial, sans-serif" font-size="26" font-weight="700">Kurtas, sarees and festive sets</text>
+  <rect x="45" y="222" width="175" height="54" rx="27" fill="#151515"/>
+  <text x="76" y="258" fill="#fff" font-family="Arial, sans-serif" font-size="20" font-weight="800">SHOP NOW</text>
+  <path d="M464 125h90l54 220H410z" fill="#e94f64"/>
+</svg>
